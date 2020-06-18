@@ -32,3 +32,5 @@ dingding:
   app-key: "dings9oidi5vagfqrfms"
   app-secret: "5yK-_vFzAaiOR1bGxMKReeZRbCUFzt366CLqB14iTxaAhbCa8Vw2EVBJiw9_96vd"
   agent-id: "785653110"
+  process-instance-def-key:
+  : ""

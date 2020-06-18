@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  */
 @Data
 public class ContractApplyRequestBody {
+
     private String contractName;
 
     private String contractType;

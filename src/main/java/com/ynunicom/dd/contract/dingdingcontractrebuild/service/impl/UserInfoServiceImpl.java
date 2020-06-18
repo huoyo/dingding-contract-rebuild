@@ -1,5 +1,6 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
@@ -7,11 +8,13 @@ import com.dingtalk.api.request.OapiUserGetRequest;
 import com.dingtalk.api.request.OapiUserSimplelistRequest;
 import com.dingtalk.api.response.OapiUserGetResponse;
 import com.dingtalk.api.response.OapiUserSimplelistResponse;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -55,6 +58,18 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         JSONObject jsonObject = JSONObject.parseObject(response.getBody());
         return jsonObject;
+    }
+
+    @Override
+    public JSONArray getUserInfoByUserIdlist(String accessToken, List<String> userIdList) {
+        JSONArray jsonArray = new JSONArray();
+        for (String userId :
+                userIdList) {
+            JSONObject innerJson = getUserInfo(accessToken, userId);
+            PersonEntity personEntity = new PersonEntity(innerJson.getString("name"),innerJson.getString("userid"),innerJson.getString("avatar"));
+            jsonArray.add(personEntity);
+        }
+        return jsonArray;
     }
 
 }
