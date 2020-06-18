@@ -20,6 +20,8 @@ public class ContractApplyRequestBody {
 
     private String contractRunnerUserId;
 
+    private String contractRunnerNamer;
+
     private String theirEntityName;
 
     private MultipartFile theirQuality;
@@ -51,6 +53,8 @@ public class ContractApplyRequestBody {
     private String organizers;
 
     private  String organizerUserId;
+
+    private String organizerUserName;
 
     private  String contactPhone;
 

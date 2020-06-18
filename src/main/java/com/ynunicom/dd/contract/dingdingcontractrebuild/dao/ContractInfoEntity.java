@@ -42,8 +42,8 @@ public class ContractInfoEntity extends BaseModel{
     @TableField("theirQualityFilePath")
     private String theirQualityFilePath;
 
-    @TableField("standTemplateFilePath")
-    private String standTemplateFilePath;
+    @TableField("standTemplateFileId")
+    private String standTemplateFileId;
 
     @TableField("useageOfStandTemplate")
     private String useageOfStandTemplate;

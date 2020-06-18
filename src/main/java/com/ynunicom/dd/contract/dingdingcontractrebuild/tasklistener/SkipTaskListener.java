@@ -15,7 +15,7 @@ import java.util.Map;
  */
 
 /**
- * 这个监听器实现了当审批人为空或者当审批已通过时的自动跳转，在任务开始时调用
+ * 这个监听器实现了当审批人为空或者当审批已通过时的自动跳转，在任务开始时调用，此监听器优先级应最低
  */
 public class SkipTaskListener implements TaskListener {
     private static final long serialVersionUID = 5303026947812088792L;
