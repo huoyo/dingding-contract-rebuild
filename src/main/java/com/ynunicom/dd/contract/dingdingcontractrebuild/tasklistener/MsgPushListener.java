@@ -20,6 +20,10 @@ import java.util.HashMap;
  * @author: jinye.Bai
  * @date: 2020/6/17 17:13
  */
+
+/**
+ * 此监听器应在任务开始时调用
+ */
 public class MsgPushListener implements TaskListener {
     @SneakyThrows
     @Override
