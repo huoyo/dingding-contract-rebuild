@@ -20,9 +20,9 @@ public class TaskController {
     @Resource
     TaskOptionService taskOptionService;
 
-    @GetMapping("/get")
+    @GetMapping("/getByAssigneeUserId")
     public ResponseDto get(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId){
-        return ResponseDto.success(taskOptionService.get(accessToken,userId));
+        return ResponseDto.success(taskOptionService.getByAssigneeUserId(accessToken,userId));
     }
 
     @GetMapping("/getByApplyUserId")

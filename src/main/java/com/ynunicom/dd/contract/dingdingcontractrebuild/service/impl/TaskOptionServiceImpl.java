@@ -34,7 +34,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
 
     @SneakyThrows
     @Override
-    public JSONArray get(String accessToken, String userId) {
+    public JSONArray getByAssigneeUserId(String accessToken, String userId) {
         if (!userVerify.verify(accessToken,userId)){
             throw new BussException("用户不存在");
         }

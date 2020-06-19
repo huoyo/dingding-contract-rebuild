@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONArray;
  */
 public interface TaskOptionService {
 
-    public JSONArray get(String accessToken , String userId);
+    public JSONArray getByAssigneeUserId(String accessToken , String userId);
 
     public JSONArray getByApplyUserId(String accessToken , String applyUserId);
 
