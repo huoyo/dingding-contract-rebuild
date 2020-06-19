@@ -1,6 +1,6 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.JudgeRequestBody;
 
 /**
@@ -9,6 +9,6 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.JudgeReq
  */
 public interface JudgeService{
 
-    public JSONObject judge(String accessToken, JudgeRequestBody judgeRequestBody);
+    public JSONArray judge(String accessToken, JudgeRequestBody judgeRequestBody);
 
 }
