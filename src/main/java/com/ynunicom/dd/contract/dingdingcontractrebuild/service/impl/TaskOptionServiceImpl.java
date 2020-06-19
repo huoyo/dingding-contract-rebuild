@@ -56,7 +56,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             throw new BussException("用户不存在");
         }
         JSONArray jsonArray = new JSONArray();
-        List<Task> taskList = taskService.createTaskQuery().taskVariableValueEquals("applyUserId").list();
+        List<Task> taskList = taskService.createTaskQuery().taskVariableValueEquals("applyUserId",applyUserId).list();
         List<Map<String,Object>> mapList = new ArrayList<>();
         for (Task task :
                 taskList) {
