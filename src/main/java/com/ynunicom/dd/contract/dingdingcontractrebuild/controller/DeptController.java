@@ -1,9 +1,5 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiDepartmentListRequest;
-import com.dingtalk.api.response.OapiDepartmentListResponse;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.DeptService;
 import lombok.SneakyThrows;

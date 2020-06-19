@@ -25,7 +25,7 @@ public class SkipTaskListener implements TaskListener {
         int key = Integer.parseInt(delegateTask.getTaskDefinitionKey());
         TaskService taskService = SpringHelper.getTaskService();
         Map<String,Object> map = taskService.getVariables(delegateTask.getId());
-        List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("judgePersonEntityList");
+        List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("stages");
         JudgePersonEntity judgePersonEntity = judgePersonEntityList.get(key-1);
         if ("null".equals(judgePersonEntity.getPersonEntity().getUserId())){
             judgePersonEntity.setIsOk(true);
