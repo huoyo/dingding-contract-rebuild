@@ -1,4 +1,5 @@
 
+
 spring:
   jackson:
     time-zone: GMT+8
@@ -21,6 +22,11 @@ spring:
 
     dbcp2:
       fast-fail-validation:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
 
 mybatis:
   table:
@@ -40,3 +46,4 @@ dingding:
   app-secret: "5yK-_vFzAaiOR1bGxMKReeZRbCUFzt366CLqB14iTxaAhbCa8Vw2EVBJiw9_96vd"
   agent-id: "785653110"
   process-instance-def-key: "ContractApplyForYnUnicomRebuild"
+  process-filename: "dingdingContractRebuild.bpmn20.xml"

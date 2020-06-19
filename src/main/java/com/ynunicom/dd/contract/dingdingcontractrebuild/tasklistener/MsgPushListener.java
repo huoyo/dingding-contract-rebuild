@@ -38,7 +38,9 @@ public class MsgPushListener implements TaskListener {
         TaskService taskService = SpringHelper.getTaskService();
         Map<String,Object> map = taskService.getVariables(delegateTask.getId());
         List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("stages");
-        Integer key = Integer.parseInt(delegateTask.getTaskDefinitionKey());
+        String str = delegateTask.getTaskDefinitionKey();
+        str = str.substring(1);
+        int key = Integer.parseInt(str);
         if (judgePersonEntityList.get(key-1).getIsOk()){
             return;
         }

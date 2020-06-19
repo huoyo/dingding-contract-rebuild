@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         exclude = {DruidDataSourceAutoConfigure.class,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class}
 )
 @MapperScan({"com.gitee.sunchenbin.mybatis.actable.dao.*"} )
-@ComponentScan("com.gitee.sunchenbin.mybatis.actable.manager.*")
+@ComponentScan({"com.gitee.sunchenbin.mybatis.actable.manager.*","com.ynunicom.dd.contract.dingdingcontractrebuild"})
 @EnableScheduling
 public class DingdingContractRebuildApplication {
 

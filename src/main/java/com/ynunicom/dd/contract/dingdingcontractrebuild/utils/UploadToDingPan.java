@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
@@ -132,10 +131,10 @@ public class UploadToDingPan {
 
         DingTalkClient finalClient = new DefaultDingTalkClient("https://oapi.dingtalk.com/file/upload/transaction");
         OapiFileUploadTransactionRequest finalRequest = new OapiFileUploadTransactionRequest();
-        finalRequest.setAgentId("13xxxxx01");
-        finalRequest.setFileSize(1000L);
-        finalRequest.setChunkNumbers(1L);
-        finalRequest.setUploadId("99F0F6DBB55A4C82822268192Bxxxxxx_0#iAEAAqRmxxxxxxxxxxxxxxxxxx");
+        finalRequest.setAgentId(appInfo.getAgentId());
+        finalRequest.setFileSize(file.length());
+        finalRequest.setChunkNumbers(chunkFileNum);
+        finalRequest.setUploadId(uploadId);
         finalRequest.setHttpMethod("GET");
         OapiFileUploadTransactionResponse finalResponse = finalClient.execute(finalRequest,accessToken);
         if (!finalResponse.isSuccess()){

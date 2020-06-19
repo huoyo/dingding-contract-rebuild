@@ -22,7 +22,9 @@ public class SkipTaskListener implements TaskListener {
 
     @Override
     public void notify(DelegateTask delegateTask) {
-        int key = Integer.parseInt(delegateTask.getTaskDefinitionKey());
+        String str = delegateTask.getTaskDefinitionKey();
+        str = str.substring(1);
+        int key = Integer.parseInt(str);
         TaskService taskService = SpringHelper.getTaskService();
         Map<String,Object> map = taskService.getVariables(delegateTask.getId());
         List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("stages");
