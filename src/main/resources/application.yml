@@ -23,7 +23,14 @@ spring:
       fast-fail-validation:
 
 mybatis:
-  mapper-locations: classpath*:/dao/mapper/*Mapper.xml
+  table:
+    auto: update
+  model:
+    pack: com.ynunicom.dd.contract.dingdingcontractrebuild.dao
+  database:
+    type: mysql
+mybatis-plus:
+  mapper-locations: classpath*:/dao/mapper/*.xml,classpath*:com/gitee/sunchenbin/mybatis/actable/mapping/*/*.xml
 
 server:
   port: 6051
@@ -32,5 +39,4 @@ dingding:
   app-key: "dings9oidi5vagfqrfms"
   app-secret: "5yK-_vFzAaiOR1bGxMKReeZRbCUFzt366CLqB14iTxaAhbCa8Vw2EVBJiw9_96vd"
   agent-id: "785653110"
-  process-instance-def-key:
-  : ""
+  process-instance-def-key: "ContractApplyForYnUnicomRebuild"

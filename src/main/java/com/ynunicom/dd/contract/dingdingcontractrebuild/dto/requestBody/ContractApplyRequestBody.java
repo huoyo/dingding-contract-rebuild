@@ -54,7 +54,7 @@ public class ContractApplyRequestBody {
 
     private  String organizerUserId;
 
-    private String organizerUserName;
+    private String organizerName;
 
     private  String contactPhone;
 

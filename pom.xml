@@ -51,6 +51,14 @@
             <version>2.5.4</version>
         </dependency>
 
+        <!--mybatis-plus自动建表功能-->
+        <dependency>
+            <groupId>com.gitee.sunchenbin.mybatis.actable</groupId>
+            <artifactId>mybatis-enhance-actable</artifactId>
+            <version>1.0.8.1.RELEASE</version>
+        </dependency>
+
+
         <!--flowable依赖-->
         <dependency>
             <groupId>org.flowable</groupId>
