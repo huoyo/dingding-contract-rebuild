@@ -44,6 +44,6 @@ public class FileSaver {
         fileOutputStream.flush();
         fileOutputStream.close();
         inputStream.close();
-        return outFile.getPath();
+        return outFile.getName();
     }
 }

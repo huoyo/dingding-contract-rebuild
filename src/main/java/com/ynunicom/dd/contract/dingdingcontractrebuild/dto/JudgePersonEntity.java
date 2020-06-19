@@ -14,5 +14,7 @@ public class JudgePersonEntity implements Serializable {
 
     private Boolean isOk;
 
+    private String comment;
+
     private PersonEntity personEntity;
 }
