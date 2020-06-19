@@ -7,14 +7,18 @@ import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.ServiceInfo;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.SpringHelper;
 import lombok.SneakyThrows;
+import org.flowable.engine.TaskService;
 import org.flowable.engine.delegate.TaskListener;
 import org.flowable.task.service.delegate.DelegateTask;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: jinye.Bai
@@ -28,6 +32,17 @@ public class MsgPushListener implements TaskListener {
     @SneakyThrows
     @Override
     public void notify(DelegateTask delegateTask) {
+        /**
+         * 如果审批人已经同意则不发消息
+         */
+        TaskService taskService = SpringHelper.getTaskService();
+        Map<String,Object> map = taskService.getVariables(delegateTask.getId());
+        List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("stages");
+        Integer key = Integer.parseInt(delegateTask.getTaskDefinitionKey());
+        if (judgePersonEntityList.get(key-1).getIsOk()){
+            return;
+        }
+
 
         RestTemplate restTemplate = SpringHelper.getBean("restTemplate");
         ServiceInfo serviceInfo = SpringHelper.getBean("serviceInfo");

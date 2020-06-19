@@ -38,9 +38,10 @@ public class FileSaver {
         }
         InputStream inputStream = file.getInputStream();
         FileOutputStream fileOutputStream = new FileOutputStream(outFile);
-        byte[] buffer = new byte[inputStream.available()];
-        inputStream.read(buffer);
-        fileOutputStream.write(buffer);
+        byte[] buffer = new byte[1024];
+        while (inputStream.read(buffer)!=-1){
+            fileOutputStream.write(buffer);
+        }
         fileOutputStream.flush();
         fileOutputStream.close();
         inputStream.close();

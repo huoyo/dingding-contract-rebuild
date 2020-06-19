@@ -58,6 +58,11 @@ public class ContractInfoEntity extends BaseModel{
     @TableField("theirEntityName")
     private String theirEntityName;
 
+    @Column(name = "theirQualityDingPanId",type = MySqlTypeConstant.VARCHAR,isNull = false,
+            comment = "对方资质储存钉盘id")
+    @TableField("theirQualityDingPanId")
+    private String theirQualityDingPanId;
+
     @Column(name = "theirQualityFilePath",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "对方资质储存路径")
     @TableField("theirQualityFilePath")
@@ -73,6 +78,11 @@ public class ContractInfoEntity extends BaseModel{
     @TableField("useageOfStandTemplate")
     private String useageOfStandTemplate;
 
+    @Column(name = "reasonOfNotUsingStandTemplateDingPanId",type = MySqlTypeConstant.VARCHAR,
+            comment = "标准合同模板未使用的原因说明文件存储钉盘id")
+    @TableField("reasonOfNotUsingStandTemplateDingPanId")
+    private String reasonOfNotUsingStandTemplateDingPanId;
+
     @Column(name = "reasonOfNotUsingStandTemplateFilePath",type = MySqlTypeConstant.VARCHAR,
             comment = "标准合同模板未使用的原因说明文件存储路径")
     @TableField("reasonOfNotUsingStandTemplateFilePath")
@@ -82,6 +92,11 @@ public class ContractInfoEntity extends BaseModel{
             comment = "合同正文")
     @TableField("contractText")
     private String contractText;
+
+    @Column(name = "attachmentDingPanid",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件存储钉盘id")
+    @TableField("attachmentDingPanid")
+    private String attachmentDingPanid;
 
     @Column(name = "attachmentFilePath",type = MySqlTypeConstant.VARCHAR,
             comment = "附件存储路径")

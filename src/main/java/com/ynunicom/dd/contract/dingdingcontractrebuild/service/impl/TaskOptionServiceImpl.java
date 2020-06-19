@@ -43,7 +43,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         List<Map<String,Object>> mapList = new ArrayList<>();
         for (Task task :
                 taskList) {
-            mapList.add(taskService.getVariables(task.getId()));
+            Map<String,Object> map = taskService.getVariables(task.getId());
+            map.put("taskId",task.getId());
+            mapList.add(map);
         }
         jsonArray.addAll(mapList);
         return jsonArray;
@@ -60,7 +62,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         List<Map<String,Object>> mapList = new ArrayList<>();
         for (Task task :
                 taskList) {
-            mapList.add(taskService.getVariables(task.getId()));
+            Map<String,Object> map = taskService.getVariables(task.getId());
+            map.put("taskId",task.getId());
+            mapList.add(map);
         }
         jsonArray.addAll(mapList);
         return jsonArray;
