@@ -34,4 +34,9 @@ public class AttachmentEntity extends BaseModel {
             ,comment = "附件文件路径")
     @TableField("attachmentFilePath")
     private String attachmentFilePath;
+
+    @Column(name = "attachmentDingPanMediaId",type = MySqlTypeConstant.VARCHAR,isNull = false
+            ,comment = "附件钉盘mediaId")
+    @TableField("attachmentDingPanMediaId")
+    private String attachmentDingPanMediaId;
 }

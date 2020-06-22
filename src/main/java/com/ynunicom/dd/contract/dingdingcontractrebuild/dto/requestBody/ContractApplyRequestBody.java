@@ -26,7 +26,7 @@ public class ContractApplyRequestBody {
 
     private MultipartFile theirQuality;
 
-    private MultipartFile standTemplate;
+    private String standTemplateId;
 
     private String useageOfStandTemplate;
 
@@ -47,6 +47,8 @@ public class ContractApplyRequestBody {
     private BigDecimal moneyOfTax;
 
     private BigDecimal moneyWithTax;
+
+    private Long startTime;
 
     private Long endTime;
 

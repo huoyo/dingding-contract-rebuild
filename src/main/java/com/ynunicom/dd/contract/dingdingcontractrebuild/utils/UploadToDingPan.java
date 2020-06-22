@@ -67,12 +67,13 @@ public class UploadToDingPan {
 
     /**
      *
-     * @param file
+     * @param fileName
      * @param accessToken
      * @return 返回值是media_id,是钉盘的id凭证
      */
     @SneakyThrows
-    public String doUpload(File file,String accessToken){
+    public String doUpload(String fileName,String accessToken){
+        File file  = new File(filePath+'/'+fileName);
         if (file.length()<=0){
             throw new BussException("上传文件为空文件，上传失败");
         }

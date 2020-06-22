@@ -15,4 +15,6 @@ public class AppInfo {
 
     private String agentId;
 
+    private String corpId;
+
 }

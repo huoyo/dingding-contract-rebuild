@@ -5,6 +5,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.JudgeRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.JudgeService;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UserVerify;
 import lombok.SneakyThrows;
 import org.flowable.engine.TaskService;
@@ -12,6 +13,7 @@ import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -22,13 +24,17 @@ import java.util.Map;
 @Service
 public class JudgeServiceImpl implements JudgeService {
 
+    @Resource
+    UserInfoService userInfoService;
+
     @Autowired
     TaskService taskService;
 
     @SneakyThrows
     @Override
     public JSONArray judge(String accessToken, JudgeRequestBody judgeRequestBody) {
-        if (!new UserVerify().verify(accessToken,judgeRequestBody.getUserId())){
+        new UserVerify();
+        if (UserVerify.verify(accessToken, judgeRequestBody.getUserId(), userInfoService)){
             throw new BussException("用户不存在");
         }
 

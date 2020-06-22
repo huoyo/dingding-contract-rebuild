@@ -42,8 +42,9 @@ server:
   port: 6051
 
 dingding:
-  app-key: "dings9oidi5vagfqrfms"
-  app-secret: "5yK-_vFzAaiOR1bGxMKReeZRbCUFzt366CLqB14iTxaAhbCa8Vw2EVBJiw9_96vd"
-  agent-id: "785653110"
+  app-key: "dingpcgfojft6nw4ifdi"
+  app-secret: "Crt31CokHxEOSKsuUxIWrZIAwcvdTgx0007KQRk8uTI5UbP8GLtdoviNvBkvfaGy"
+  agent-id: "809746748"
+  corp-Id: "dingc25328cad366b400a39a90f97fcb1e09"
   process-instance-def-key: "ContractApplyForYnUnicomRebuild"
   process-filename: "dingdingContractRebuild.bpmn20.xml"

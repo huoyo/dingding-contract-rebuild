@@ -2,11 +2,8 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.utils;
 
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -15,15 +12,10 @@ import java.io.InputStream;
  * @author: jinye.Bai
  * @date: 2020/6/19 10:50
  */
-@Component
 public class FileSaver {
 
-    @Resource
-    @Qualifier("filePath")
-    public String filePath;
-
     @SneakyThrows
-    public String save(MultipartFile file){
+    public static String save(String filePath,MultipartFile file){
 
         String fileName =  file.getOriginalFilename();
         File temp = new File(filePath);

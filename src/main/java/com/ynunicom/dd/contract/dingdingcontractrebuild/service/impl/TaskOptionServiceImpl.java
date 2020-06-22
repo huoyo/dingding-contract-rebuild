@@ -23,19 +23,16 @@ import java.util.Map;
 @Service
 public class TaskOptionServiceImpl implements TaskOptionService {
 
-    @Resource
-    UserVerify userVerify;
-
     @Autowired
     TaskService taskService;
 
-    @Autowired
+    @Resource
     UserInfoService userInfoService;
 
     @SneakyThrows
     @Override
     public JSONArray getByAssigneeUserId(String accessToken, String userId) {
-        if (!userVerify.verify(accessToken,userId)){
+        if (UserVerify.verify(accessToken, userId, userInfoService)){
             throw new BussException("用户不存在");
         }
         JSONArray jsonArray = new JSONArray();
@@ -54,7 +51,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @SneakyThrows
     @Override
     public JSONArray getByApplyUserId(String accessToken, String applyUserId) {
-        if (!userVerify.verify(accessToken,applyUserId)){
+        if (UserVerify.verify(accessToken, applyUserId, userInfoService)){
             throw new BussException("用户不存在");
         }
         JSONArray jsonArray = new JSONArray();

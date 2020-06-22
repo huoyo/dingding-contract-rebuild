@@ -21,13 +21,17 @@ public class AppInfoConfig {
     @Value("${dingding.agent-id}")
     String agentId;
 
+    @Value("${dingding.corp-id}")
+    String corpId;
 
-    @Bean
+
+    @Bean("appInfo")
     public AppInfo appInfo(){
         AppInfo appInfo = new AppInfo();
         appInfo.setAgentId(agentId);
         appInfo.setAppKey(appKey);
         appInfo.setAppSecret(appSecret);
+        appInfo.setCorpId(corpId);
         return appInfo;
     }
 
