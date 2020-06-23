@@ -24,6 +24,9 @@ public class AppInfoConfig {
     @Value("${dingding.corp-id}")
     String corpId;
 
+    @Value("${dingding.nonceStr}")
+    String nonceStr;
+
 
     @Bean("appInfo")
     public AppInfo appInfo(){
@@ -32,6 +35,7 @@ public class AppInfoConfig {
         appInfo.setAppKey(appKey);
         appInfo.setAppSecret(appSecret);
         appInfo.setCorpId(corpId);
+        appInfo.setNonceStr(nonceStr);
         return appInfo;
     }
 

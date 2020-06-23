@@ -3,27 +3,35 @@
   <process id="ContractApplyForYnUnicomRebuild" name="云南联通新通信有限公司合同审批流程 重制版" isExecutable="true">
     <documentation>云南联通新通信有限公司合同审批流程</documentation>
     <userTask id="apply" name="经办人发起合同流程"></userTask>
-    <userTask id="a1" name="审核人1" flowable:candidateUsers="reviewer" flowable:candidateGroups="${deptId}" flowable:skipExpression="${listSize&lt;1}">
+    <userTask id="a1" name="审核人1">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="a2" name="审核人2" flowable:candidateUsers="manager" flowable:candidateGroups="${superDeptId}" flowable:skipExpression="${listSize&lt;2}">
+    <userTask id="a2" name="审核人2">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="a4" name="审核人4" flowable:candidateUsers="legalReviewer" flowable:candidateGroups="${legalDeptId}" flowable:skipExpression="${listSize&lt;4}">
+    <userTask id="a4" name="审核人4">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="a5" name="审核人5" flowable:candidateUsers="leader" flowable:candidateGroups="${leaderDeptId}" flowable:skipExpression="${listSize&lt;5}">
+    <userTask id="a5" name="审核人5">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="saveContract" name="合同管理员" flowable:candidateUsers="contractSaver" flowable:candidateGroups="${contractSaverDept}">
+    <userTask id="saveContract" name="合同管理员">
       <extensionElements>
         <flowable:taskListener event="create" class="com.ynunicom.dc.dingdingcontractapp.tasklistener.ContractSaverTaskListener"></flowable:taskListener>
       </extensionElements>
@@ -37,8 +45,10 @@
     <exclusiveGateway id="sid-94D01810-AB0F-41EC-896B-D12D16C7AE05"></exclusiveGateway>
     <exclusiveGateway id="sid-64975AB2-844C-4B99-B277-368281259669"></exclusiveGateway>
     <sequenceFlow id="sid-872BE1EF-FDE5-4E89-A500-85AD625A5D57" sourceRef="a2" targetRef="sid-64975AB2-844C-4B99-B277-368281259669"></sequenceFlow>
-    <userTask id="a3" name="审核人3" flowable:candidateUsers="financialReviewer" flowable:candidateGroups="${financialDeptId}" flowable:skipExpression="${listSize&lt;3}">
+    <userTask id="a3" name="审核人3">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
@@ -87,65 +97,69 @@
     <sequenceFlow id="sid-8EA69043-1616-4817-91FE-98AA7437A563" sourceRef="sid-338C81A7-A097-4E61-B2B0-5F3E23E7891C" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isContractSaverOk=="false"}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="a6" name="审核人6" flowable:skipExpression="${listSize&lt;6}">
+    <userTask id="a6" name="审核人6">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
     <sequenceFlow id="sid-DAAB1F65-790C-43FD-B118-DBA5E8099D93" sourceRef="a5" targetRef="sid-7373819B-4571-4F13-991D-07258AE391C2"></sequenceFlow>
     <exclusiveGateway id="sid-1D1516F0-1CBF-47D5-AEBB-D7D1EF9020FE"></exclusiveGateway>
-    <sequenceFlow id="sid-38058B8A-3CDC-4C4B-864B-A1A8F844E9A6" sourceRef="a6" targetRef="sid-1D1516F0-1CBF-47D5-AEBB-D7D1EF9020FE"></sequenceFlow>
     <exclusiveGateway id="sid-F5475F7C-6B00-4225-A20A-98097CBB53BB"></exclusiveGateway>
     <userTask id="a7" name="审核人7">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.AssigneeListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
     <sequenceFlow id="sid-6E083DD1-09C4-431B-BD29-EC8996B0C75D" sourceRef="a7" targetRef="sid-F5475F7C-6B00-4225-A20A-98097CBB53BB"></sequenceFlow>
-    <sequenceFlow id="sid-ECE3F3B1-9DEF-4F5B-B6BB-02EA05A7C176" sourceRef="sid-D2927CEE-AEB7-4DB2-8176-F12D6D325BD6" targetRef="sid-DA3E8C79-4614-476F-A0FF-DAE564F58CF9">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${endMethod=='endByTime'}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-2E95A0C2-94BE-45C1-A03A-CA239FF30A42" sourceRef="sid-64975AB2-844C-4B99-B277-368281259669" targetRef="a3">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
-    </sequenceFlow>
+    <sequenceFlow id="sid-38058B8A-3CDC-4C4B-864B-A1A8F844E9A6" sourceRef="a6" targetRef="sid-1D1516F0-1CBF-47D5-AEBB-D7D1EF9020FE"></sequenceFlow>
     <sequenceFlow id="sid-35184D43-33B6-4DC7-9A7B-1E6FA95A4837" sourceRef="sid-94D01810-AB0F-41EC-896B-D12D16C7AE05" targetRef="a2">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-42F7202B-2042-48A8-95A7-9CE49437761C" sourceRef="sid-94D01810-AB0F-41EC-896B-D12D16C7AE05" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-D679A574-122C-458B-8EFF-08AEDAA26EF4" sourceRef="sid-64975AB2-844C-4B99-B277-368281259669" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-0CB89A68-3AD6-42FD-B1D2-7C09D1A916F6" sourceRef="sid-A70F685A-A98C-451F-AC9F-B3B4E0826EBC" targetRef="a4">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
+    <sequenceFlow id="sid-2E95A0C2-94BE-45C1-A03A-CA239FF30A42" sourceRef="sid-64975AB2-844C-4B99-B277-368281259669" targetRef="a3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-91521F4B-895C-4400-9FDF-E52C1ACD8E2D" sourceRef="sid-A70F685A-A98C-451F-AC9F-B3B4E0826EBC" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-572DC169-1378-48D8-97A7-E4B0759531E1" sourceRef="sid-52AD0A72-D7E7-466E-8945-79E1FACB8D2F" targetRef="a5">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
+    <sequenceFlow id="sid-0CB89A68-3AD6-42FD-B1D2-7C09D1A916F6" sourceRef="sid-A70F685A-A98C-451F-AC9F-B3B4E0826EBC" targetRef="a4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-AD525E73-9E6D-46DA-84E5-D35011632E82" sourceRef="sid-52AD0A72-D7E7-466E-8945-79E1FACB8D2F" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-113EA0DA-13DD-4F0D-BD2F-D41C302C567B" sourceRef="sid-7373819B-4571-4F13-991D-07258AE391C2" targetRef="a6">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
+    <sequenceFlow id="sid-572DC169-1378-48D8-97A7-E4B0759531E1" sourceRef="sid-52AD0A72-D7E7-466E-8945-79E1FACB8D2F" targetRef="a5">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-D745239C-DD5A-4C1C-B0CC-897FD1FC3449" sourceRef="sid-7373819B-4571-4F13-991D-07258AE391C2" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-43E120C5-2CA7-46E9-A963-610A954E3C31" sourceRef="sid-F5475F7C-6B00-4225-A20A-98097CBB53BB" targetRef="saveContract">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-D8C65717-E977-434D-AFDC-30F736B892AE" sourceRef="sid-1D1516F0-1CBF-47D5-AEBB-D7D1EF9020FE" targetRef="a7">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${cunrrentIsOk}]]></conditionExpression>
+    <sequenceFlow id="sid-113EA0DA-13DD-4F0D-BD2F-D41C302C567B" sourceRef="sid-7373819B-4571-4F13-991D-07258AE391C2" targetRef="a6">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-14BE8E27-4F04-4922-99DB-0225FC8E4568" sourceRef="sid-1D1516F0-1CBF-47D5-AEBB-D7D1EF9020FE" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-D8C65717-E977-434D-AFDC-30F736B892AE" sourceRef="sid-1D1516F0-1CBF-47D5-AEBB-D7D1EF9020FE" targetRef="a7">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-7F121140-C751-4BD5-99F4-F272BF178370" sourceRef="sid-F5475F7C-6B00-4225-A20A-98097CBB53BB" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!cunrrentIsOk}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!currentIsOk}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-43E120C5-2CA7-46E9-A963-610A954E3C31" sourceRef="sid-F5475F7C-6B00-4225-A20A-98097CBB53BB" targetRef="saveContract">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${currentIsOk}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-ECE3F3B1-9DEF-4F5B-B6BB-02EA05A7C176" sourceRef="sid-D2927CEE-AEB7-4DB2-8176-F12D6D325BD6" targetRef="sid-DA3E8C79-4614-476F-A0FF-DAE564F58CF9">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${endMethod=='endByTime'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-18C34DD1-C52A-4B6F-8E2F-3461D3056896" sourceRef="sid-D2927CEE-AEB7-4DB2-8176-F12D6D325BD6" targetRef="sid-338C81A7-A097-4E61-B2B0-5F3E23E7891C">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${endMethod=='endNotByTime'}]]></conditionExpression>
@@ -253,13 +267,13 @@
         <omgdi:waypoint x="102.69354838709677" y="362.66306451612905"></omgdi:waypoint>
         <omgdi:waypoint x="75.57645502645502" y="405.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-572DC169-1378-48D8-97A7-E4B0759531E1" id="BPMNEdge_sid-572DC169-1378-48D8-97A7-E4B0759531E1">
-        <omgdi:waypoint x="51.565714285714286" y="209.87183219178084"></omgdi:waypoint>
-        <omgdi:waypoint x="50.8927374301676" y="240.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-AD525E73-9E6D-46DA-84E5-D35011632E82" id="BPMNEdge_sid-AD525E73-9E6D-46DA-84E5-D35011632E82">
         <omgdi:waypoint x="70.99912154377691" y="190.44524495677234"></omgdi:waypoint>
         <omgdi:waypoint x="224.99999999999358" y="190.00272988505748"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-572DC169-1378-48D8-97A7-E4B0759531E1" id="BPMNEdge_sid-572DC169-1378-48D8-97A7-E4B0759531E1">
+        <omgdi:waypoint x="51.565714285714286" y="209.87183219178084"></omgdi:waypoint>
+        <omgdi:waypoint x="50.8927374301676" y="240.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-D8C65717-E977-434D-AFDC-30F736B892AE" id="BPMNEdge_sid-D8C65717-E977-434D-AFDC-30F736B892AE">
         <omgdi:waypoint x="185.98061594202898" y="443.96287110789285"></omgdi:waypoint>

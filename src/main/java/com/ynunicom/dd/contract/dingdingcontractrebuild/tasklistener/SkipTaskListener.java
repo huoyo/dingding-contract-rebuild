@@ -3,8 +3,8 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.SpringHelper;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.delegate.TaskListener;
 import org.flowable.task.service.delegate.DelegateTask;
-import org.flowable.task.service.delegate.TaskListener;
 
 import java.util.List;
 import java.util.Map;
@@ -34,11 +34,13 @@ public class SkipTaskListener implements TaskListener {
         if ("null".equals(judgePersonEntity.getPersonEntity().getUserId())){
             judgePersonEntity.setIsOk(true);
             cunrrentIsOk = true;
-            taskService.complete(delegateTask.getId());
+            taskService.complete(delegateTask.getId(),map);
+            return;
         }
         if (judgePersonEntity.getIsOk()){
             cunrrentIsOk = true;
-            taskService.complete(delegateTask.getId());
+            taskService.complete(delegateTask.getId(),map);
+            return;
         }
 
     }

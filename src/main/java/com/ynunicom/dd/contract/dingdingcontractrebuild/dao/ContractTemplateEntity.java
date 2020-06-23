@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author: jinye.Bai
  * @date: 2020/6/19 10:21
  */
+@Data
 @Table(name = "Contract_Template")
 @TableName("Contract_Template")
 public class ContractTemplateEntity extends BaseModel {
@@ -29,6 +31,10 @@ public class ContractTemplateEntity extends BaseModel {
     @TableField("version")
     @Column(name = "version",type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "版本编号")
     private String version;
+
+    @TableField("filePath")
+    @Column(name = "filePath",type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "文件路径,不包含任何一截前置路径")
+    private String filePath;
 
     @TableField("standeTextName")
     @Column(name = "standeTextName",type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "标准文本名称")
@@ -58,19 +64,19 @@ public class ContractTemplateEntity extends BaseModel {
     @TableField("useageWide")
     private String useageWide;
 
-    @Column(name = "standTextActiveDate", type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "标准文本生效日期")
+    @Column(name = "standTextActiveDate", type = MySqlTypeConstant.DATE, isNull = false,comment = "标准文本生效日期")
     @TableField("standTextActiveDate")
     private Date standTextActiveDate;
 
-    @Column(name = "standTextDeactiveDate", type = MySqlTypeConstant.VARCHAR, comment = "标准文本失效日期")
+    @Column(name = "standTextDeactiveDate", type = MySqlTypeConstant.DATE, comment = "标准文本失效日期")
     @TableField("standTextDeactiveDate")
     private Date standTextDeactiveDate;
 
     @Column(name = "standTextCreator", type = MySqlTypeConstant.VARCHAR,isNull = false, comment = "标准文本创建人")
     @TableField("standTextCreator")
-    private Date standTextCreator;
+    private String standTextCreator;
 
     @Column(name = "standTextDisc", type = MySqlTypeConstant.VARCHAR,isNull = false, comment = "标准文本备注说明")
     @TableField("standTextDisc")
-    private Date standTextDisc;
+    private String standTextDisc;
 }

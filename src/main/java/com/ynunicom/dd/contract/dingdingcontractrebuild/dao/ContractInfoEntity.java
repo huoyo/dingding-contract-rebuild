@@ -6,8 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import lombok.Data;
 import org.joda.time.DateTime;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author: jinye.Bai
@@ -16,7 +20,7 @@ import org.joda.time.DateTime;
 @Data
 @TableName("CONTRACT_INFO")
 @Table(name = "CONTRACT_INFO")
-public class ContractInfoEntity extends BaseModel{
+public class ContractInfoEntity extends BaseModel implements Serializable {
 
     @Column(name = "id", type = MySqlTypeConstant.VARCHAR, isNull = false,
             isKey = true, comment = "id")
@@ -78,6 +82,11 @@ public class ContractInfoEntity extends BaseModel{
     @TableField("useageOfStandTemplate")
     private String useageOfStandTemplate;
 
+    @Column(name = "standTemplateDingPanId",type = MySqlTypeConstant.VARCHAR,
+            comment = "标准合同模板钉盘Id")
+    @TableField("standTemplateDingPanId")
+    private String standTemplateDingPanId;
+
     @Column(name = "reasonOfNotUsingStandTemplateDingPanId",type = MySqlTypeConstant.VARCHAR,
             comment = "标准合同模板未使用的原因说明文件存储钉盘id")
     @TableField("reasonOfNotUsingStandTemplateDingPanId")
@@ -133,10 +142,15 @@ public class ContractInfoEntity extends BaseModel{
     @TableField("moneyWithTax")
     private String moneyWithTax;
 
+    @Column(name = "stratTime",type = MySqlTypeConstant.DATETIME,isNull = false,
+            comment = "合同开始时间")
+    @TableField("stratTime")
+    private Date stratTime;
+
     @Column(name = "endTime",type = MySqlTypeConstant.DATETIME,isNull = false,
             comment = "合同履行期限")
     @TableField("endTime")
-    private DateTime endTime;
+    private Date endTime;
 
     @Column(name = "organizers",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "承办部门")
@@ -167,4 +181,30 @@ public class ContractInfoEntity extends BaseModel{
             comment = "最终审批人userId列表")
     @TableField("finalReviewerList")
     private String finalReviewerList;
+
+    public ContractInfoEntity(ContractApplyRequestBody contractApplyRequestBody){
+        this.contactPhone = contractApplyRequestBody.getContactPhone();
+        this.contractName = contractApplyRequestBody.getContractName();
+        this.contractRunnerName = contractApplyRequestBody.getContractRunnerNamer();
+        this.contractRunnerUserId = contractApplyRequestBody.getContractRunnerUserId();
+        this.contractText = contractApplyRequestBody.getContractText();
+        this.contractType = contractApplyRequestBody.getContractType();
+        this.moneyOfTax = String.valueOf(contractApplyRequestBody.getMoneyOfTax());
+        this.taxRate = String.valueOf(contractApplyRequestBody.getTaxRate());
+        this.moneyWithOutTax = String.valueOf(contractApplyRequestBody.getMoneyWithOutTax());
+        this.moneyWithTax = String.valueOf(contractApplyRequestBody.getMoneyWithTax());
+        this.ourSideEntity = contractApplyRequestBody.getOurSideEntity();
+        this.theirEntityName = contractApplyRequestBody.getTheirEntityName();
+        this.organizerName = contractApplyRequestBody.getOrganizerName();
+        this.organizers = contractApplyRequestBody.getOrganizers();
+        this.organizerUserId = contractApplyRequestBody.getOrganizerUserId();
+        this.standTemplateFileId = contractApplyRequestBody.getStandTemplateId();
+        this.stratTime = new Date(contractApplyRequestBody.getStartTime());
+        this.endTime = new Date(contractApplyRequestBody.getEndTime());
+        this.reviewerList = contractApplyRequestBody.getReviewerList();
+        this.finalReviewerList = contractApplyRequestBody.getFinalReviewerList();
+        this.theWayTheyChoice = contractApplyRequestBody.getTheWayTheyChoice();
+        this.theWayToPay = contractApplyRequestBody.getTheWayToPay();
+        this.useageOfStandTemplate = contractApplyRequestBody.getUseageOfStandTemplate();
+    }
 }

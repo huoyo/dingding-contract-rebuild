@@ -17,4 +17,6 @@ public class AppInfo {
 
     private String corpId;
 
+    private String nonceStr;
+
 }

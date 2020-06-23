@@ -11,8 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class FilePathConfig {
 
     @Bean
-    public String filePath(){
-        return "/contractFile";
-    }
+    public String filePath(){ return "/contractFile"; }
+
 
 }

@@ -12,14 +12,15 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UploadToDingPan;
 import lombok.SneakyThrows;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.RuntimeService;
+import org.flowable.engine.runtime.ProcessInstance;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author: jinye.Bai
@@ -27,7 +28,11 @@ import java.io.File;
  */
 @RestController
 @RequestMapping("/test")
+@Slf4j
 public class TestController {
+
+    @Resource
+    RuntimeService runtimeService;
 
     @Resource
     AppInfo appInfo;
@@ -48,5 +53,16 @@ public class TestController {
         }
         throw new BussException(fileName+"推送失败");
 
+    }
+
+    @GetMapping
+    public ResponseDto del(){
+        List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().list();
+        for (ProcessInstance processInstance:
+        processInstanceList) {
+            log.info(processInstance.getId());
+            runtimeService.deleteProcessInstance(processInstance.getId(),"");
+        }
+        return null;
     }
 }

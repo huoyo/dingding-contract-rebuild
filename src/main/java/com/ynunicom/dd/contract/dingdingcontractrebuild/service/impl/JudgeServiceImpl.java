@@ -41,7 +41,7 @@ public class JudgeServiceImpl implements JudgeService {
         String taskId = judgeRequestBody.getTaskId();
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         Map<String,Object> map = taskService.getVariables(taskId);
-        int stageNo = Integer.parseInt(task.getTaskDefinitionKey());
+        int stageNo = Integer.parseInt(task.getTaskDefinitionKey().substring(1));
         List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("stages");
         JudgePersonEntity judgePersonEntity = judgePersonEntityList.get(stageNo-1);
         if (!judgePersonEntity.getPersonEntity().getUserId().equals(judgeRequestBody.getUserId())){
@@ -49,7 +49,8 @@ public class JudgeServiceImpl implements JudgeService {
         }
         judgePersonEntity.setIsOk(judgeRequestBody.getIsOk());
         judgePersonEntity.setComment(judgeRequestBody.getComment());
-        taskService.complete(taskId);
+        map.put("currentIsOk",judgeRequestBody.getIsOk());
+        taskService.complete(taskId,map);
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(map);
 

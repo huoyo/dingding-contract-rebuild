@@ -1,11 +1,10 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -28,6 +27,16 @@ public class TaskController {
     @GetMapping("/getByApplyUserId")
     public ResponseDto getByApplyUserId(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId){
         return ResponseDto.success(taskOptionService.getByApplyUserId(accessToken,userId));
+    }
+
+    /**
+     * data-form格式
+     * @param contractApplyRequestBody
+     * @return
+     */
+    @PostMapping("/startNewInst")
+    public ResponseDto startNewInst(@Validated ContractApplyRequestBody contractApplyRequestBody,@RequestParam("accessToken")String accessToken){
+        return ResponseDto.success(taskOptionService.startNewInst(contractApplyRequestBody,accessToken));
     }
 
 
