@@ -7,7 +7,6 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTemplateEnti
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractRecorrectRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RecorrectService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
@@ -17,7 +16,6 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UploadToDingPan;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
