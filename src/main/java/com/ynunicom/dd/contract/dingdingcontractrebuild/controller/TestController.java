@@ -12,6 +12,7 @@ import com.taobao.api.internal.util.WebUtils;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.AddToSpaceId;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UploadToDingPan;
@@ -102,5 +103,11 @@ public class TestController {
             throw new BussException(response.getErrmsg());
         }
         return ResponseDto.success(response.getErrmsg());
+    }
+
+    @SneakyThrows
+    @PostMapping("/addToSpace")
+    public ResponseDto addToSpace(@RequestParam("accessToken")String accessToken,String userId,String mediaId,String code,String spaceId,String fileName) {
+        return ResponseDto.success(AddToSpaceId.addToSpaceId(accessToken, appInfo, code, mediaId, spaceId, fileName));
     }
 }

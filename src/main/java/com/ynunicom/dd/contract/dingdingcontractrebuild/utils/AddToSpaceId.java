@@ -14,7 +14,7 @@ import lombok.SneakyThrows;
  */
 public class AddToSpaceId {
     @SneakyThrows
-    public static boolean addToSpaceId(String accessToken, AppInfo appInfo,String code,String mediaId,String spaceId,String fileName){
+    public static OapiCspaceAddResponse addToSpaceId(String accessToken, AppInfo appInfo,String code,String mediaId,String spaceId,String fileName){
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/cspace/add");
         OapiCspaceAddRequest request = new OapiCspaceAddRequest();
         request.setAgentId(appInfo.getAgentId());
@@ -28,6 +28,6 @@ public class AddToSpaceId {
         if (!response.isSuccess()){
             throw new BussException(response.getErrmsg());
         }
-        return response.isSuccess();
+        return response;
     }
 }
