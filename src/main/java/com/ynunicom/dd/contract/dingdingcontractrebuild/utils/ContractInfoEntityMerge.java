@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Date;
 
 /**
  * @author: jinye.Bai
@@ -27,12 +28,16 @@ public class ContractInfoEntityMerge {
                 }
                 beforeField.setAccessible(true);
                 commingField.setAccessible(true);
-                /** 明天处理，旨在合并两个对象的属性
-                if (commingField.getType() String){
-                    if (!"".equals((String)(commingField.get(comming)))||commingField.get(comming)!=null){
+                if (commingField.getType() == Date.class){
+                    if (null!=commingField.get(comming)){
                         beforeField.set(before,commingField.get(comming));
                     }
-                }**/
+                }
+                if (commingField.getType() == String.class){
+                    if (commingField.get(comming)!=null && !((String)commingField.get(comming)).isEmpty()){
+                        beforeField.set(before,commingField.get(comming));
+                    }
+                }
             }
             return before;
      }

@@ -27,6 +27,9 @@ public class AppInfoConfig {
     @Value("${dingding.nonceStr}")
     String nonceStr;
 
+    @Value("${dingding.domain}")
+    String domain;
+
 
     @Bean("appInfo")
     public AppInfo appInfo(){
@@ -36,6 +39,7 @@ public class AppInfoConfig {
         appInfo.setAppSecret(appSecret);
         appInfo.setCorpId(corpId);
         appInfo.setNonceStr(nonceStr);
+        appInfo.setDomain(domain);
         return appInfo;
     }
 

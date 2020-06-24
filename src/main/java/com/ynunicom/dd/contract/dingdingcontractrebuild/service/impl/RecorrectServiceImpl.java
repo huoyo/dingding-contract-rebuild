@@ -77,7 +77,7 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //附件保存并上传钉盘,存入流程变量
-        if (contractRecorrectRequestBody.getAttachment()!=null){
+        if (!contractRecorrectRequestBody.getAttachment().isEmpty()){
             MultipartFile attachment = contractRecorrectRequestBody.getAttachment();
             String attachmentFileName = FileSaver.save(filePath,attachment);
             String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
@@ -93,7 +93,7 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //合同模板上传钉盘，存入流程变量
-        if (contractRecorrectRequestBody.getStandTemplateId()!=null){
+        if (!contractRecorrectRequestBody.getStandTemplateId().isEmpty()){
             ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractRecorrectRequestBody.getStandTemplateId());
             String templateFileName = contractTemplateEntity.getFilePath();
             String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
@@ -105,7 +105,7 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //对方资质文件保存并上传钉盘，存入流程变量
-        if (contractRecorrectRequestBody.getTheirQuality()!=null){
+        if (!contractRecorrectRequestBody.getTheirQuality().isEmpty()){
             MultipartFile qualityFile = contractRecorrectRequestBody.getTheirQuality();
             String qualityFileName = FileSaver.save(filePath,qualityFile);
             String qualityFileMediaId = uploadToDingPan.doUpload(qualityFileName,accessToken);
@@ -118,7 +118,7 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //不使用标准模板的说明文件保存并上传钉盘，存入流程变量
-        if (contractRecorrectRequestBody.getReasonOfNotUsingStandTemplate()!=null){
+        if (!contractRecorrectRequestBody.getReasonOfNotUsingStandTemplate().isEmpty()){
             MultipartFile reason = contractRecorrectRequestBody.getReasonOfNotUsingStandTemplate();
             String reasonFileName = FileSaver.save(filePath,reason);
             String reasonMediaId = uploadToDingPan.doUpload(reasonFileName,accessToken);
@@ -134,6 +134,7 @@ public class RecorrectServiceImpl implements RecorrectService {
 
         //结束任务
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
+        map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
         return map;
     }

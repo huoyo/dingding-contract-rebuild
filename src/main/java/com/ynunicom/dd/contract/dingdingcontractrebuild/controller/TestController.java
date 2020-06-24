@@ -3,7 +3,11 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiCspaceAddToSingleChatRequest;
+import com.dingtalk.api.request.OapiCspaceGetCustomSpaceRequest;
+import com.dingtalk.api.request.OapiCspaceGrantCustomSpaceRequest;
 import com.dingtalk.api.response.OapiCspaceAddToSingleChatResponse;
+import com.dingtalk.api.response.OapiCspaceGetCustomSpaceResponse;
+import com.dingtalk.api.response.OapiCspaceGrantCustomSpaceResponse;
 import com.taobao.api.internal.util.WebUtils;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
@@ -64,5 +68,39 @@ public class TestController {
             runtimeService.deleteProcessInstance(processInstance.getId(),"");
         }
         return null;
+    }
+
+    @SneakyThrows
+    @GetMapping("/space")
+    public ResponseDto space(@RequestParam("accessToken")String accessToken){
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/cspace/get_custom_space");
+        OapiCspaceGetCustomSpaceRequest request = new OapiCspaceGetCustomSpaceRequest();
+        request.setAgentId(appInfo.getAgentId());
+        request.setDomain(appInfo.getDomain());
+        request.setHttpMethod("GET");
+        OapiCspaceGetCustomSpaceResponse response = client.execute(request,accessToken);
+        if (!response.isSuccess()){
+            throw new BussException(response.getErrmsg());
+        }
+        return ResponseDto.success("spaceId",response.getSpaceid());
+    }
+
+    @SneakyThrows
+    @GetMapping("/spaceAuth")
+    public ResponseDto spaceAuth(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId,@RequestParam("mediaId")String mediaId){
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/cspace/grant_custom_space");
+        OapiCspaceGrantCustomSpaceRequest request = new OapiCspaceGrantCustomSpaceRequest();
+        request.setAgentId(appInfo.getAgentId());
+        request.setDomain(appInfo.getDomain());
+        request.setType("download");
+        request.setUserid(userId);
+        request.setFileids(mediaId);
+        request.setDuration(3600L);
+        request.setHttpMethod("GET");
+        OapiCspaceGrantCustomSpaceResponse response = client.execute(request,accessToken);
+        if (!response.isSuccess()){
+            throw new BussException(response.getErrmsg());
+        }
+        return ResponseDto.success(response.getErrmsg());
     }
 }

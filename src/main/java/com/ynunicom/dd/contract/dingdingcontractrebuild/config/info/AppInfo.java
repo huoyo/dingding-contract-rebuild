@@ -19,4 +19,6 @@ public class AppInfo {
 
     private String nonceStr;
 
+    private String domain;
+
 }

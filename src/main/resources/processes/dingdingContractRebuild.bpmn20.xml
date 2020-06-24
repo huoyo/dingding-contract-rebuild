@@ -66,10 +66,10 @@
     <userTask id="sid-86FBBACA-9464-497C-B785-97D1E6821782" name="合同修改
 " flowable:assignee="${applyUserId}">
       <extensionElements>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.RecorrectMsgPushListener"></flowable:taskListener>
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="sid-39FA8DCD-C91B-43AA-9A3F-3B83DA49E1E3" sourceRef="sid-86FBBACA-9464-497C-B785-97D1E6821782" targetRef="a1"></sequenceFlow>
     <sequenceFlow id="sid-E1B97F67-071F-4E4D-887C-2940B31075A8" sourceRef="a3" targetRef="sid-A70F685A-A98C-451F-AC9F-B3B4E0826EBC"></sequenceFlow>
     <sequenceFlow id="sid-24F4372A-EA81-434A-B5EA-D7D86FBCB980" name="发起修改动作
 " sourceRef="sid-5C5B10AD-AA5C-4137-99A7-9357E3C38F10" targetRef="sid-86FBBACA-9464-497C-B785-97D1E6821782">
@@ -164,6 +164,7 @@
     <sequenceFlow id="sid-18C34DD1-C52A-4B6F-8E2F-3461D3056896" sourceRef="sid-D2927CEE-AEB7-4DB2-8176-F12D6D325BD6" targetRef="sid-338C81A7-A097-4E61-B2B0-5F3E23E7891C">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${endMethod=='endNotByTime'}]]></conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="sid-39FA8DCD-C91B-43AA-9A3F-3B83DA49E1E3" sourceRef="sid-86FBBACA-9464-497C-B785-97D1E6821782" targetRef="a1"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_ContractApplyForYnUnicomRebuild">
     <bpmndi:BPMNPlane bpmnElement="ContractApplyForYnUnicomRebuild" id="BPMNPlane_ContractApplyForYnUnicomRebuild">
@@ -284,8 +285,8 @@
         <omgdi:waypoint x="710.0" y="59.90509235505392"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-39FA8DCD-C91B-43AA-9A3F-3B83DA49E1E3" id="BPMNEdge_sid-39FA8DCD-C91B-43AA-9A3F-3B83DA49E1E3">
-        <omgdi:waypoint x="324.95000000000005" y="195.16724137931035"></omgdi:waypoint>
-        <omgdi:waypoint x="659.9999999999999" y="229.82758620689657"></omgdi:waypoint>
+        <omgdi:waypoint x="324.95000000000005" y="197.78687069891924"></omgdi:waypoint>
+        <omgdi:waypoint x="659.9999999999998" y="226.87161523079624"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-28076032-EDC9-4C8F-BDA5-C149B9092075" id="BPMNEdge_sid-28076032-EDC9-4C8F-BDA5-C149B9092075">
         <omgdi:waypoint x="440.7205898566703" y="594.2272977941176"></omgdi:waypoint>

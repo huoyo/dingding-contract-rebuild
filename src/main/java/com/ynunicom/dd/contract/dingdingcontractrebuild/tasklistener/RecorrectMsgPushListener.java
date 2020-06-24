@@ -51,7 +51,7 @@ public class RecorrectMsgPushListener implements TaskListener {
         OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
         msg.setMsgtype("text");
         msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
-        msg.getText().setContent("["+ new Date().toString() +"]"+"您有新的合同审批事件,进入应用查看");
+        msg.getText().setContent("["+ new Date().toString() +"]"+"您的合同审批被驳回修改,进入应用查看");
         request.setMsg(msg);
         OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request,accessToken);
         if (!response.isSuccess()){
