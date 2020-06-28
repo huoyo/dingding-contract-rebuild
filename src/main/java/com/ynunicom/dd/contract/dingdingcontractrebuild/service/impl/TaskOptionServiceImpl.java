@@ -186,13 +186,15 @@ public class TaskOptionServiceImpl implements TaskOptionService {
 
 
         //合同模板上传钉盘，存入流程变量
-        ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractApplyRequestBody.getStandTemplateId());
-        String templateFileName = contractTemplateEntity.getFilePath();
-        String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
-        if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),templateMediaId,templateFileName,accessToken,appInfo)){
-            log.info("文件:"+templateFileName+",mediaId:"+templateMediaId+",推送失败");
+        if (!contractApplyRequestBody.getStandTemplateId().isEmpty()){
+            ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractApplyRequestBody.getStandTemplateId());
+            String templateFileName = contractTemplateEntity.getFilePath();
+            String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),templateMediaId,templateFileName,accessToken,appInfo)){
+                log.info("文件:"+templateFileName+",mediaId:"+templateMediaId+",推送失败");
+            }
+            contractInfoEntity.setStandTemplateDingPanId(templateMediaId);
         }
-        contractInfoEntity.setStandTemplateDingPanId(templateMediaId);
 
 
         //对方资质文件保存并上传钉盘，存入流程变量
