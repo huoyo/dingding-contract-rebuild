@@ -97,10 +97,15 @@ public class ContractInfoEntity extends BaseModel implements Serializable {
     @TableField("reasonOfNotUsingStandTemplateFilePath")
     private String reasonOfNotUsingStandTemplateFilePath;
 
-    @Column(name = "contractText",type = MySqlTypeConstant.VARCHAR,isNull = false,
-            comment = "合同正文")
-    @TableField("contractText")
-    private String contractText;
+    @Column(name = "contractTextFilePath",type = MySqlTypeConstant.VARCHAR,isNull = false,
+            comment = "合同正文储存路径")
+    @TableField("contractTextFilePath")
+    private String contractTextFilePath;
+
+    @Column(name = "contractTextDingPanId",type = MySqlTypeConstant.VARCHAR,isNull = false,
+            comment = "合同正文钉盘id")
+    @TableField("contractTextDingPanId")
+    private String contractTextDingPanId;
 
     @Column(name = "attachmentDingPanid",type = MySqlTypeConstant.VARCHAR,
             comment = "附件存储钉盘id")
@@ -187,7 +192,6 @@ public class ContractInfoEntity extends BaseModel implements Serializable {
         this.contractName = contractApplyRequestBody.getContractName();
         this.contractRunnerName = contractApplyRequestBody.getContractRunnerNamer();
         this.contractRunnerUserId = contractApplyRequestBody.getContractRunnerUserId();
-        this.contractText = contractApplyRequestBody.getContractText();
         this.contractType = contractApplyRequestBody.getContractType();
         this.moneyOfTax = String.valueOf(contractApplyRequestBody.getMoneyOfTax());
         this.taxRate = String.valueOf(contractApplyRequestBody.getTaxRate());

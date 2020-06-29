@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -35,17 +36,15 @@ public class ContractApplyRequestBody {
     @NotNull
     private MultipartFile theirQuality;
 
-    @NotBlank
     private String standTemplateId;
 
     @NotBlank
     private String useageOfStandTemplate;
 
-    @NotNull
     private MultipartFile reasonOfNotUsingStandTemplate;
 
-    @NotBlank
-    private String contractText;
+    @NotNull
+    private MultipartFile contractText;
 
     @NotNull
     private MultipartFile attachment;

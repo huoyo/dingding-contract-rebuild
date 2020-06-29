@@ -16,7 +16,9 @@ public class FileSaver {
 
     @SneakyThrows
     public static String save(String filePath,MultipartFile file){
-
+        if (file.isEmpty()){
+            return null;
+        }
         String fileName =  file.getOriginalFilename();
         File temp = new File(filePath);
         if (!temp.exists()){

@@ -18,6 +18,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -162,6 +163,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     public Map<String, Object> startNewInst(ContractApplyRequestBody contractApplyRequestBody, String accessToken) {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("ContractApplyForYnUnicomRebuild");
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+        if (task==null){
+            throw new FlowableObjectNotFoundException("任务创建失败");
+        }
         task = taskVarLoad(task,contractApplyRequestBody,accessToken);
         Map<String,Object> map = taskService.getVariables(task.getId());
 
@@ -211,12 +215,26 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         //不使用标准模板的说明文件保存并上传钉盘，存入流程变量
         MultipartFile reason = contractApplyRequestBody.getReasonOfNotUsingStandTemplate();
         String reasonFileName = FileSaver.save(filePath,reason);
-        String reasonMediaId = uploadToDingPan.doUpload(reasonFileName,accessToken);
-        if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),reasonMediaId,reasonFileName,accessToken,appInfo)){
-            log.info("文件:"+reasonFileName+",mediaId:"+reasonMediaId+",推送失败");
+        if (reasonFileName!=null){
+            String reasonMediaId = uploadToDingPan.doUpload(reasonFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),reasonMediaId,reasonFileName,accessToken,appInfo)){
+                log.info("文件:"+reasonFileName+",mediaId:"+reasonMediaId+",推送失败");
+            }
+            contractInfoEntity.setReasonOfNotUsingStandTemplateFilePath(reasonFileName);
+            contractInfoEntity.setReasonOfNotUsingStandTemplateDingPanId(reasonMediaId);
         }
-        contractInfoEntity.setReasonOfNotUsingStandTemplateFilePath(reasonFileName);
-        contractInfoEntity.setReasonOfNotUsingStandTemplateDingPanId(reasonMediaId);
+
+        //合同正文保存并上传钉盘，存入流程变量
+        MultipartFile contractText = contractApplyRequestBody.getContractText();
+        String contractTextFileName = FileSaver.save(filePath,contractText);
+        if (contractTextFileName!=null){
+            String contractTextMediaId = uploadToDingPan.doUpload(contractTextFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),contractTextMediaId,contractTextFileName,accessToken,appInfo)){
+                log.info("文件:"+contractTextFileName+",mediaId:"+contractTextMediaId+",推送失败");
+            }
+            contractInfoEntity.setContractTextFilePath(contractTextFileName);
+            contractInfoEntity.setContractTextDingPanId(contractTextMediaId);
+        }
 
         //合同变量存入数据库
         contractInfoMapper.insert(contractInfoEntity);

@@ -29,9 +29,18 @@ public class DocToPDF {
         return true;
     }
 
-    @SneakyThrows
-    public static String trans(String docFileName, String filePath){
-        String pdfFileName = docFileName.substring(0,docFileName.length()-5)+".pdf";
+    public static String trans(String docFileName, String filePath) throws Exception {
+        File docFile = new File(filePath+"/"+docFileName);
+        if (!docFile.exists()){
+            throw new BussException(docFileName+"文件不存在，无法转换");
+        }
+        String[] pdfFileNames = docFileName.split("\\.");
+        StringBuilder pdfFileNameBuilder = new StringBuilder();
+        for (int i = 0;i<pdfFileNames.length-1;i++) {
+            pdfFileNameBuilder.append(pdfFileNames[i]);
+        }
+        pdfFileNameBuilder.append(".pdf");
+        String pdfFileName = pdfFileNameBuilder.toString();
         File path = new File("/pdf");
         if (!path.exists()){
             if (!path.mkdir()){
@@ -39,7 +48,7 @@ public class DocToPDF {
             }
         }
         if (new File(path+"/"+pdfFileName).exists()){
-            return pdfFileName;
+            return pdfFileName.toString();
         }
         if (!new DocToPDF().getLicense()){
             throw new BussException("凭证文件获取失败");
@@ -51,6 +60,6 @@ public class DocToPDF {
         document.save(fileOutputStream, SaveFormat.PDF);
         fileOutputStream.close();
         log.info("文件"+docFileName+"转换为文件"+pdfFileName+"完成，耗时"+String.valueOf((System.currentTimeMillis()-before)/1000)+"秒");
-        return pdfFileName;
+        return pdfFileName.toString();
     }
 }

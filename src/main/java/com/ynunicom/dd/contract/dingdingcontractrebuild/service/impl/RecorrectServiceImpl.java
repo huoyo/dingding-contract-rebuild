@@ -14,6 +14,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UploadToDingPan;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
@@ -65,6 +66,9 @@ public class RecorrectServiceImpl implements RecorrectService {
     @Transactional
     public Map<String, Object> recorrect(String accessToken, ContractRecorrectRequestBody contractRecorrectRequestBody) {
         Task task = taskService.createTaskQuery().taskId(contractRecorrectRequestBody.getTaskId()).singleResult();
+        if (task==null){
+            throw new FlowableObjectNotFoundException(contractRecorrectRequestBody.getTaskId()+"任务没有找到");
+        }
         task = taskOptionService.taskVarLoadFromOutSide(task,contractRecorrectRequestBody,accessToken);
         Map<String,Object> map = taskService.getVariables(task.getId());
 
@@ -125,6 +129,20 @@ public class RecorrectServiceImpl implements RecorrectService {
             }
             contractInfoEntity.setReasonOfNotUsingStandTemplateFilePath(reasonFileName);
             contractInfoEntity.setReasonOfNotUsingStandTemplateDingPanId(reasonMediaId);
+        }
+
+        //合同正文保存并上传钉盘，存入流程变量
+        if (!contractRecorrectRequestBody.getContractText().isEmpty()){
+            MultipartFile contractText = contractRecorrectRequestBody.getContractText();
+            String contractTextFileName = FileSaver.save(filePath,contractText);
+            if (contractTextFileName!=null){
+                String contractTextMediaId = uploadToDingPan.doUpload(contractTextFileName,accessToken);
+                if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),contractTextMediaId,contractTextFileName,accessToken,appInfo)){
+                    log.info("文件:"+contractTextFileName+",mediaId:"+contractTextMediaId+",推送失败");
+                }
+                contractInfoEntity.setContractTextFilePath(contractTextFileName);
+                contractInfoEntity.setContractTextDingPanId(contractTextMediaId);
+            }
         }
 
         //合同变量存入数据库

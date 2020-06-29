@@ -3,6 +3,7 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.controller.exceptioncon
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,6 +19,12 @@ public class ExceptionController {
     public ResponseDto bussException(BussException e){
         log.error(e.getMsg());
         return ResponseDto.failed(e.getMsg());
+    }
+
+    @ExceptionHandler(FlowableObjectNotFoundException.class)
+    public ResponseDto flowableObjectNotFoundException(FlowableObjectNotFoundException e){
+        log.error(e.getMessage());
+        return ResponseDto.failed("任务获取失败，可能是taskId错误");
     }
 
 
