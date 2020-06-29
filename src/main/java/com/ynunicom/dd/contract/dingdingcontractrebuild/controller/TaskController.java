@@ -2,6 +2,7 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.HurryUpRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,11 @@ public class TaskController {
     @PostMapping("/startNewInst")
     public ResponseDto startNewInst(@Validated ContractApplyRequestBody contractApplyRequestBody,@RequestParam("accessToken")String accessToken){
         return ResponseDto.success(taskOptionService.startNewInst(contractApplyRequestBody,accessToken));
+    }
+
+    @PostMapping("/hurryUp")
+    public ResponseDto hurryUp(@RequestParam("accessToken")String accessToken, @RequestBody HurryUpRequestBody hurryUpRequestBody){
+        return ResponseDto.success(taskOptionService.hurryUp(accessToken,hurryUpRequestBody));
     }
 
 

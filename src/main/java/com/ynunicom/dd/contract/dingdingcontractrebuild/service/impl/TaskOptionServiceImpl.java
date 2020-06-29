@@ -2,6 +2,10 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
+import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
@@ -12,6 +16,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTempl
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.HurryUpRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
@@ -244,5 +249,51 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
         return map;
+    }
+
+    @SneakyThrows
+    @Override
+    public String hurryUp(String accessToken, HurryUpRequestBody hurryUpRequestBody) {
+        String judgeName = userInfoService.getUserInfo(accessToken,hurryUpRequestBody.getUserId()).getString("name");
+        if (judgeName==null||judgeName.isEmpty()){
+            throw new BussException("用户"+hurryUpRequestBody.getUserId()+"不存在");
+        }
+        Task task = taskService.createTaskQuery().taskId(hurryUpRequestBody.getTaskId()).singleResult();
+        if (task==null){
+            throw new FlowableObjectNotFoundException(hurryUpRequestBody.getTaskId()+"任务没有找到");
+        }
+        Map<String,Object> map = taskService.getVariables(task.getId());
+        List<JudgePersonEntity> judgePersonEntityList = (List<JudgePersonEntity>) map.get("stages");
+        String judgerId = null;
+        for (JudgePersonEntity judgePersonEntity:
+            judgePersonEntityList) {
+            if (judgePersonEntity.getIsOk()){
+                continue;
+            }
+            else {
+                judgerId = judgePersonEntity.getPersonEntity().getUserId();
+            }
+        }
+        if (judgerId==null||judgerId.isEmpty()){
+            throw new BussException("所有审核都已通过，无需催办");
+        }
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
+
+        OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
+        request.setUseridList(judgerId);
+        request.setAgentId(Long.parseLong(appInfo.getAgentId()));
+        request.setToAllUser(false);
+
+        OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
+        msg.setMsgtype("text");
+        msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
+        String message = new Date() +judgeName+ "催办了你的合同审批";
+        msg.getText().setContent(message);
+        request.setMsg(msg);
+        OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request,accessToken);
+        if (!response.isSuccess()){
+            throw new BussException(response.getErrmsg());
+        }
+        return message;
     }
 }
