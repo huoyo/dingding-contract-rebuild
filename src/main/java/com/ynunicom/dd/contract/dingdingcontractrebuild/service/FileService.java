@@ -12,4 +12,6 @@ public interface FileService {
     public HttpServletResponse getDoc(String accessToken, String fileName, HttpServletResponse httpServletResponse,String userId);
 
     public HttpServletResponse getPdf(String accessToken, String fileName, HttpServletResponse httpServletResponse,String userId);
+
+    public HttpServletResponse getOther(String accessToken, String fileName, HttpServletResponse httpServletResponse,String userId);
 }

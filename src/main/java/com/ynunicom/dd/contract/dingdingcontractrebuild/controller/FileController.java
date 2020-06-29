@@ -30,4 +30,9 @@ public class FileController {
         httpServletResponse = fileService.getPdf(accessToken,fileName,httpServletResponse,userId);
     }
 
+    @GetMapping("/other")
+    public void other(@RequestParam("accessToken")String accessToken, @RequestParam("fileName")String fileName, @RequestParam("userId")String userId,HttpServletResponse httpServletResponse){
+        httpServletResponse = fileService.getOther(accessToken,fileName,httpServletResponse,userId);
+    }
+
 }

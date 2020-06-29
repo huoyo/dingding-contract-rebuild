@@ -107,15 +107,35 @@ public class ContractInfoEntity extends BaseModel implements Serializable {
     @TableField("contractTextDingPanId")
     private String contractTextDingPanId;
 
-    @Column(name = "attachmentDingPanid",type = MySqlTypeConstant.VARCHAR,
-            comment = "附件存储钉盘id")
-    @TableField("attachmentDingPanid")
-    private String attachmentDingPanid;
+    @Column(name = "attachmentDingPanid1",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件1存储钉盘id")
+    @TableField("attachmentDingPanid1")
+    private String attachmentDingPanid1;
 
-    @Column(name = "attachmentFilePath",type = MySqlTypeConstant.VARCHAR,
-            comment = "附件存储路径")
-    @TableField("attachmentFilePath")
-    private String attachmentFilePath;
+    @Column(name = "attachmentFilePath1",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件1存储路径")
+    @TableField("attachmentFilePath1")
+    private String attachmentFilePath1;
+
+    @Column(name = "attachmentDingPanid2",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件1存储钉盘id")
+    @TableField("attachmentDingPanid2")
+    private String attachmentDingPanid2;
+
+    @Column(name = "attachmentFilePath2",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件1存储路径")
+    @TableField("attachmentFilePath2")
+    private String attachmentFilePath2;
+
+    @Column(name = "attachmentDingPanid3",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件1存储钉盘id")
+    @TableField("attachmentDingPanid3")
+    private String attachmentDingPanid3;
+
+    @Column(name = "attachmentFilePath3",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件1存储路径")
+    @TableField("attachmentFilePath3")
+    private String attachmentFilePath3;
 
     @Column(name = "theWayTheyChoice",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "对方选择方式")

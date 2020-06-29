@@ -180,18 +180,50 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         contractInfoEntity.setId(contractId);
 
 
-        //附件保存并上传钉盘,存入流程变量
-        MultipartFile attachment = contractApplyRequestBody.getAttachment();
-        String attachmentFileName = FileSaver.save(filePath,attachment);
-        String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
-        if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
-            log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+        //附件1保存并上传钉盘,存入流程变量
+        MultipartFile attachment = contractApplyRequestBody.getAttachment1();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
         }
-        AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
-        attachmentMapper.insert(attachmentEntity);
-        contractInfoEntity.setAttachmentDingPanid(attachmentMediaId);
-        contractInfoEntity.setAttachmentFilePath(attachmentFileName);
-        String attachmentId = attachmentEntity.getId();
+
+        //附件2保存并上传钉盘,存入流程变量
+        attachment = contractApplyRequestBody.getAttachment2();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
+        //附件3保存并上传钉盘,存入流程变量
+        attachment = contractApplyRequestBody.getAttachment3();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
 
 
         //合同模板上传钉盘，存入流程变量

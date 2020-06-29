@@ -1,18 +1,23 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTemplateEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractTemplateUploadRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UserVerify;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author: jinye.Bai
@@ -29,9 +34,15 @@ public class TemplateUploadController {
     @Autowired
     ContractTemplateMapper contractTemplateMapper;
 
+    @Resource
+    UserInfoService userInfoService;
+
     @SneakyThrows
     @PostMapping
-    public void post(ContractTemplateUploadRequestBody contractTemplateUploadRequestBody){
+    public void post(ContractTemplateUploadRequestBody contractTemplateUploadRequestBody,@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId){
+        if (UserVerify.verify(accessToken,userId,userInfoService)){
+            throw new BussException(userId+"用户不存在");
+        }
         if (contractTemplateUploadRequestBody.getFile().isEmpty()){
             throw new BussException("上传文件为空");
         }
@@ -40,6 +51,27 @@ public class TemplateUploadController {
         contractTemplateEntity.setFilePath(fileName);
         contractTemplateMapper.insert(contractTemplateEntity);
         log.info(fileName+"，模板文件新增");
+    }
+
+    @SneakyThrows
+    @GetMapping("/get")
+    public ResponseDto get(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId,@RequestParam("offset")long offset,@RequestParam("size")long size){
+        if (UserVerify.verify(accessToken,userId,userInfoService)){
+            throw new BussException(userId+"用户不存在");
+        }
+        Page page = new Page(offset,size);
+        Page contractTemplateEntityPage = contractTemplateMapper.selectPage(page,new LambdaQueryWrapper<ContractTemplateEntity>());
+        return ResponseDto.success(contractTemplateEntityPage);
+    }
+
+    @SneakyThrows
+    @GetMapping("/search")
+    public ResponseDto search(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId,@RequestParam("name")String name){
+        if (UserVerify.verify(accessToken,userId,userInfoService)){
+            throw new BussException(userId+"用户不存在");
+        }
+        List<ContractTemplateEntity> contractTemplateEntityList = contractTemplateMapper.selectList(new LambdaQueryWrapper<ContractTemplateEntity>().like(ContractTemplateEntity::getStandeTextName,name));
+        return ResponseDto.success(contractTemplateEntityList);
     }
 
 }

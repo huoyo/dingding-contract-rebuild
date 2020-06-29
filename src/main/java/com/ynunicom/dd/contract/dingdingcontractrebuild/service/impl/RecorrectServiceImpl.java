@@ -78,9 +78,9 @@ public class RecorrectServiceImpl implements RecorrectService {
         contractInfoEntity.setId(contractId);
 
 
-        //附件保存并上传钉盘,存入流程变量
-        if (!contractRecorrectRequestBody.getAttachment().isEmpty()){
-            MultipartFile attachment = contractRecorrectRequestBody.getAttachment();
+        //附件1保存并上传钉盘,存入流程变量
+        MultipartFile attachment = contractRecorrectRequestBody.getAttachment1();
+        if (attachment!=null&&!attachment.isEmpty()){
             String attachmentFileName = FileSaver.save(filePath,attachment);
             String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
             if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
@@ -88,8 +88,38 @@ public class RecorrectServiceImpl implements RecorrectService {
             }
             AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractRecorrectRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
-            contractInfoEntity.setAttachmentDingPanid(attachmentMediaId);
-            contractInfoEntity.setAttachmentFilePath(attachmentFileName);
+            contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
+        //附件2保存并上传钉盘,存入流程变量
+        attachment = contractRecorrectRequestBody.getAttachment2();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractRecorrectRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
+        //附件3保存并上传钉盘,存入流程变量
+        attachment = contractRecorrectRequestBody.getAttachment3();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractRecorrectRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
             String attachmentId = attachmentEntity.getId();
         }
 

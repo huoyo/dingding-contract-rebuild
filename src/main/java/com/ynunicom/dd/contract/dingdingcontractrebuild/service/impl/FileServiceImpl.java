@@ -93,4 +93,24 @@ public class FileServiceImpl implements FileService {
             return  get(accessToken,pdfFileName,httpServletResponse,userId,false);
         }
     }
+
+    @SneakyThrows
+    @Override
+    public HttpServletResponse getOther(String accessToken, String fileName, HttpServletResponse httpServletResponse, String userId) {
+        File file = new File(filePath+"/"+fileName);
+        if (!file.exists()){
+            throw new BussException(fileName+"文件不存在");
+        }
+        httpServletResponse.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName,"UTF-8"));
+        OutputStream outputStream = httpServletResponse.getOutputStream();
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] bytes = new byte[1024];
+        while (fileInputStream.read(bytes)!=-1){
+            outputStream.write(bytes);
+        }
+        outputStream.flush();
+        outputStream.close();
+        fileInputStream.close();
+        return httpServletResponse;
+    }
 }

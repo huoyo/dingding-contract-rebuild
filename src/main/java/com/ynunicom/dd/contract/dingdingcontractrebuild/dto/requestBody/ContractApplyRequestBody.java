@@ -46,8 +46,11 @@ public class ContractApplyRequestBody {
     @NotNull
     private MultipartFile contractText;
 
-    @NotNull
-    private MultipartFile attachment;
+    private MultipartFile attachment1;
+
+    private MultipartFile attachment2;
+
+    private MultipartFile attachment3;
 
     @NotBlank
     private String theWayTheyChoice;
