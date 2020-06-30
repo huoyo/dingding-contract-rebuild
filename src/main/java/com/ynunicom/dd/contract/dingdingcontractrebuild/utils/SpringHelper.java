@@ -1,5 +1,6 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.utils;
 
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import lombok.Getter;
 import lombok.Setter;
 import org.flowable.engine.TaskService;
@@ -45,6 +46,14 @@ public class SpringHelper implements ApplicationContextAware {
 
     public static TaskService getTaskService(){
        return applicationContext.getBean(TaskService.class);
+    }
+
+    public static UserInfoService getUserInfoService(){
+        return applicationContext.getBean(UserInfoService.class);
+    }
+
+    public static String getFilePath(){
+        return (String) applicationContext.getBean("filePath");
     }
 
 }

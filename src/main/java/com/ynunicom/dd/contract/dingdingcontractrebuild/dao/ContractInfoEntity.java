@@ -203,9 +203,25 @@ public class ContractInfoEntity extends BaseModel implements Serializable {
     private String reviewerList;
 
     @Column(name = "finalReviewerList",type = MySqlTypeConstant.VARCHAR,isNull = false,
-            comment = "最终审批人userId列表")
+            comment = "最终审批人userId")
     @TableField("finalReviewerList")
     private String finalReviewerList;
+
+    @Column(name = "sign",type = MySqlTypeConstant.VARCHAR,
+            comment = "合同管理员签章")
+    @TableField("sign")
+    private String sign;
+
+    @Column(name = "save",type = MySqlTypeConstant.VARCHAR,
+            comment = "合同管理员存档")
+    @TableField("save")
+    private String save;
+
+    //合同在履行时为running
+    @Column(name = "statu",type = MySqlTypeConstant.VARCHAR,
+            comment = "合同运行状态")
+    @TableField("statu")
+    private String statu;
 
     public ContractInfoEntity(ContractApplyRequestBody contractApplyRequestBody){
         this.contactPhone = contractApplyRequestBody.getContactPhone();

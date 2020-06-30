@@ -44,23 +44,23 @@ public class ContractTemplateEntity extends BaseModel {
     @TableField("standTextType")
     private String standTextType;
 
-    @Column(name = "standTextOwnnerCorp", type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "标准文本所属公司")
+    @Column(name = "standTextOwnnerCorp", type = MySqlTypeConstant.VARCHAR,comment = "标准文本所属公司")
     @TableField("standTextOwnnerCorp")
     private String standTextOwnnerCorp;
 
-    @Column(name = "standTextOwnnerDept", type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "标准文本所属部门")
+    @Column(name = "standTextOwnnerDept", type = MySqlTypeConstant.VARCHAR,comment = "标准文本所属部门")
     @TableField("standTextOwnnerDept")
     private String standTextOwnnerDept;
 
-    @Column(name = "standTextStatu", type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "标准文本状态")
+    @Column(name = "standTextStatu", type = MySqlTypeConstant.VARCHAR,comment = "标准文本状态")
     @TableField("standTextStatu")
     private String standTextStatu;
 
-    @Column(name = "standTextProp", type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "标准文本属性")
+    @Column(name = "standTextProp", type = MySqlTypeConstant.VARCHAR,comment = "标准文本属性")
     @TableField("standTextProp")
     private String standTextProp;
 
-    @Column(name = "useageWide", type = MySqlTypeConstant.VARCHAR, isNull = false,comment = "使用范围")
+    @Column(name = "useageWide", type = MySqlTypeConstant.VARCHAR,comment = "使用范围")
     @TableField("useageWide")
     private String useageWide;
 
@@ -76,7 +76,7 @@ public class ContractTemplateEntity extends BaseModel {
     @TableField("standTextCreator")
     private String standTextCreator;
 
-    @Column(name = "standTextDisc", type = MySqlTypeConstant.VARCHAR,isNull = false, comment = "标准文本备注说明")
+    @Column(name = "standTextDisc", type = MySqlTypeConstant.VARCHAR, comment = "标准文本备注说明")
     @TableField("standTextDisc")
     private String standTextDisc;
 }

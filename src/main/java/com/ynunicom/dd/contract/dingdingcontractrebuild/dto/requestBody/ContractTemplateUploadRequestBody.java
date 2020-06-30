@@ -4,6 +4,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTemplateEnti
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,14 +16,19 @@ import java.util.Date;
 @Data
 public class ContractTemplateUploadRequestBody implements Serializable {
 
+    @NotNull
     private MultipartFile file;
 
+    @NotBlank
     private String standTextNo;
 
+    @NotBlank
     private String version;
 
+    @NotBlank
     private String standeTextName;
 
+    @NotBlank
     private String standTextType;
 
     private String standTextOwnnerCorp;
@@ -35,10 +41,13 @@ public class ContractTemplateUploadRequestBody implements Serializable {
 
     private String useageWide;
 
+    @NotBlank
     private long standTextActiveDate;
 
+    @NotBlank
     private long standTextDeactiveDate;
 
+    @NotBlank
     private String standTextCreator;
 
     private String standTextDisc;

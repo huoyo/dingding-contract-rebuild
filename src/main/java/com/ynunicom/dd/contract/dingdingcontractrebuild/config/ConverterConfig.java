@@ -24,6 +24,7 @@ public class ConverterConfig implements WebMvcConfigurer {
         fastJsonConfig.setCharset(StandardCharsets.UTF_8);
         fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteNullListAsEmpty);
         fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteNullStringAsEmpty);
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteNullBooleanAsFalse);
 
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
         converters.add(fastJsonHttpMessageConverter);

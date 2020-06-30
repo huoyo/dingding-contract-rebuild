@@ -1,5 +1,6 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
@@ -8,11 +9,14 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMap
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractRecorrectRequestBody;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RecorrectService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.OtherDeletor;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UploadToDingPan;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.engine.RuntimeService;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -62,10 +67,61 @@ public class RecorrectServiceImpl implements RecorrectService {
     @Resource
     TaskOptionService taskOptionService;
 
+    private Map<String,Object> dropContract(String taskId) throws BussException {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        Map<String,Object> map = taskService.getVariables(task.getId());
+        ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
+        String contractId = contractInfoEntity.getId();
+        if (contractId==null||contractId.isEmpty()){
+            throw new BussException(taskId+"任务的合同不在数据库中，删除失败");
+        }
+
+        //删除数据库的记录
+        int resultC = contractInfoMapper.deleteById(contractId);
+        int resultA = attachmentMapper.delete(new LambdaQueryWrapper<AttachmentEntity>().eq(AttachmentEntity::getContractInfoId,contractId));
+
+        //删除文件
+        if (!OtherDeletor.delete(contractInfoEntity.getContractTextFilePath())){
+            log.info(contractInfoEntity.getContractTextFilePath()+"删除失败");
+        }
+        if (!OtherDeletor.delete(contractInfoEntity.getTheirQualityFilePath())){
+            log.info(contractInfoEntity.getTheirQualityFilePath()+"删除失败");
+        }
+        if (!OtherDeletor.delete(contractInfoEntity.getReasonOfNotUsingStandTemplateFilePath())){
+            log.info(contractInfoEntity.getReasonOfNotUsingStandTemplateFilePath()+"删除失败");
+        }
+        if (!OtherDeletor.delete(contractInfoEntity.getAttachmentFilePath1())){
+            log.info(contractInfoEntity.getAttachmentFilePath1()+"删除失败");
+        }
+        if (!OtherDeletor.delete(contractInfoEntity.getAttachmentFilePath2())){
+            log.info(contractInfoEntity.getAttachmentFilePath2()+"删除失败");
+        }
+        if (!OtherDeletor.delete(contractInfoEntity.getAttachmentFilePath3())){
+            log.info(contractInfoEntity.getAttachmentFilePath3()+"删除失败");
+        }
+
+        //删除流程任务
+        String processInstanceId = task.getProcessInstanceId();
+        runtimeService.deleteProcessInstance(processInstanceId,"");
+
+
+
+        Map<String,Object> returnMap = new HashMap<>(1);
+        returnMap.put("删除情况","成功删除");
+        return  returnMap;
+    }
+
+    @SneakyThrows
     @Override
     @Transactional
     public Map<String, Object> recorrect(String accessToken, ContractRecorrectRequestBody contractRecorrectRequestBody) {
         Task task = taskService.createTaskQuery().taskId(contractRecorrectRequestBody.getTaskId()).singleResult();
+
+        //放弃合同申请的情况
+        if (contractRecorrectRequestBody.isDrop()){
+            return dropContract(contractRecorrectRequestBody.getTaskId());
+        }
+
         if (task==null){
             throw new FlowableObjectNotFoundException(contractRecorrectRequestBody.getTaskId()+"任务没有找到");
         }

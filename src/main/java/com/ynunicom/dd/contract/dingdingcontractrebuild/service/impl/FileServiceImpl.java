@@ -30,9 +30,6 @@ public class FileServiceImpl implements FileService {
 
     @SneakyThrows
     private HttpServletResponse get(String accessToken, String fileName, HttpServletResponse httpServletResponse, String userId,boolean fileType){
-        if (UserVerify.verify(accessToken,userId,userInfoService)){
-            throw new BussException("用户验证失败");
-        }
         File file = null;
         if (fileType){
             file = new File(filePath+"/"+fileName);

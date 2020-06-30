@@ -40,9 +40,6 @@ public class TemplateUploadController {
     @SneakyThrows
     @PostMapping
     public void post(ContractTemplateUploadRequestBody contractTemplateUploadRequestBody,@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId){
-        if (UserVerify.verify(accessToken,userId,userInfoService)){
-            throw new BussException(userId+"用户不存在");
-        }
         if (contractTemplateUploadRequestBody.getFile().isEmpty()){
             throw new BussException("上传文件为空");
         }
@@ -56,9 +53,6 @@ public class TemplateUploadController {
     @SneakyThrows
     @GetMapping("/get")
     public ResponseDto get(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId,@RequestParam("offset")long offset,@RequestParam("size")long size){
-        if (UserVerify.verify(accessToken,userId,userInfoService)){
-            throw new BussException(userId+"用户不存在");
-        }
         Page page = new Page(offset,size);
         Page contractTemplateEntityPage = contractTemplateMapper.selectPage(page,new LambdaQueryWrapper<ContractTemplateEntity>());
         return ResponseDto.success(contractTemplateEntityPage);
@@ -67,9 +61,6 @@ public class TemplateUploadController {
     @SneakyThrows
     @GetMapping("/search")
     public ResponseDto search(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId,@RequestParam("name")String name){
-        if (UserVerify.verify(accessToken,userId,userInfoService)){
-            throw new BussException(userId+"用户不存在");
-        }
         List<ContractTemplateEntity> contractTemplateEntityList = contractTemplateMapper.selectList(new LambdaQueryWrapper<ContractTemplateEntity>().like(ContractTemplateEntity::getStandeTextName,name));
         return ResponseDto.success(contractTemplateEntityList);
     }

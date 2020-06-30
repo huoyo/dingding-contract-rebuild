@@ -33,11 +33,6 @@ public class JudgeServiceImpl implements JudgeService {
     @SneakyThrows
     @Override
     public JSONArray judge(String accessToken, JudgeRequestBody judgeRequestBody) {
-        new UserVerify();
-        if (UserVerify.verify(accessToken, judgeRequestBody.getUserId(), userInfoService)){
-            throw new BussException("用户不存在");
-        }
-
         String taskId = judgeRequestBody.getTaskId();
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         Map<String,Object> map = taskService.getVariables(taskId);

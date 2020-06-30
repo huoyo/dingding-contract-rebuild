@@ -118,9 +118,6 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @SneakyThrows
     @Override
     public JSONArray getByAssigneeUserId(String accessToken, String userId) {
-        if (UserVerify.verify(accessToken, userId, userInfoService)){
-            throw new BussException("用户不存在");
-        }
         JSONArray jsonArray = new JSONArray();
         List<Task> taskList = taskService.createTaskQuery().taskAssignee(userId).list();
         List<Map<String,Object>> mapList = new ArrayList<>();
@@ -138,9 +135,6 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @SneakyThrows
     @Override
     public JSONArray getByApplyUserId(String accessToken, String applyUserId) {
-        if (UserVerify.verify(accessToken, applyUserId, userInfoService)){
-            throw new BussException("用户不存在");
-        }
         JSONArray jsonArray = new JSONArray();
         List<Task> taskListBefore = taskService.createTaskQuery().active().list();
         List<Task> taskList = new ArrayList<>();

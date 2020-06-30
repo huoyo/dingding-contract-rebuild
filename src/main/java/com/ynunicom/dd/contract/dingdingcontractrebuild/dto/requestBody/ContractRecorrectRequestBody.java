@@ -10,4 +10,7 @@ import lombok.Data;
 public class ContractRecorrectRequestBody extends ContractApplyRequestBody {
 
     private String taskId;
+
+    //这一属性为真则放弃合同申请
+    private boolean drop;
 }
