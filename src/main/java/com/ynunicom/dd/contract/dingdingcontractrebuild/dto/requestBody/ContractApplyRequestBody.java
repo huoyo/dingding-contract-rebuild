@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
  * @date: 2020/6/17 16:25
  */
 @Data
-public class ContractApplyRequestBody {
+public class ContractApplyRequestBody implements Serializable {
 
     @NotBlank
     private String contractName;

@@ -1,5 +1,6 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.dao;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -18,9 +19,9 @@ import java.util.Date;
  * @date: 2020/6/18 9:56
  */
 @Data
-@TableName("CONTRACT_INFO")
+@TableName(value = "CONTRACT_INFO")
 @Table(name = "CONTRACT_INFO")
-public class ContractInfoEntity extends BaseModel implements Serializable {
+public class ContractInfoEntity extends BaseModel implements Serializable{
 
     @Column(name = "id", type = MySqlTypeConstant.VARCHAR, isNull = false,
             isKey = true, comment = "id")
@@ -207,15 +208,25 @@ public class ContractInfoEntity extends BaseModel implements Serializable {
     @TableField("finalReviewerList")
     private String finalReviewerList;
 
-    @Column(name = "sign",type = MySqlTypeConstant.VARCHAR,
-            comment = "合同管理员签章")
+    @Column(name = "sign",type = MySqlTypeConstant.INT,
+            comment = "合同管理员签章,1代表已完成")
     @TableField("sign")
-    private String sign;
+    private int sign;
 
-    @Column(name = "save",type = MySqlTypeConstant.VARCHAR,
-            comment = "合同管理员存档")
+    @Column(name = "signName",type = MySqlTypeConstant.VARCHAR,
+            comment = "签章人")
+    @TableField("signName")
+    private String signName;
+
+    @Column(name = "save",type = MySqlTypeConstant.INT,
+            comment = "合同管理员存档,1代表已完成")
     @TableField("save")
-    private String save;
+    private int save;
+
+    @Column(name = "saveName",type = MySqlTypeConstant.VARCHAR,
+            comment = "存档人")
+    @TableField("saveName")
+    private String saveName;
 
     //合同在履行时为running
     @Column(name = "statu",type = MySqlTypeConstant.VARCHAR,

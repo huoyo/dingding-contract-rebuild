@@ -30,6 +30,18 @@ public class AppInfoConfig {
     @Value("${dingding.domain}")
     String domain;
 
+    @Value("${dingding.contract-saver-role}")
+    String contractSaverRole;
+
+    @Value("${dingding.super-user-role}")
+    String superUserRole;
+
+    @Value("${dingding.contract-saver-role-group}")
+    String contractSaverRoleGroup;
+
+    @Value("${dingding.contract-saver-role-id}")
+    String contractSaverRoleId;
+
 
     @Bean("appInfo")
     public AppInfo appInfo(){
@@ -40,6 +52,10 @@ public class AppInfoConfig {
         appInfo.setCorpId(corpId);
         appInfo.setNonceStr(nonceStr);
         appInfo.setDomain(domain);
+        appInfo.setContractSaverRole(contractSaverRole);
+        appInfo.setSuperUserRole(superUserRole);
+        appInfo.setContractSaverRoleGroup(contractSaverRoleGroup);
+        appInfo.setContractSaverRoleId(contractSaverRoleId);
         return appInfo;
     }
 

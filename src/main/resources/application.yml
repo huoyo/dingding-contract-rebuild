@@ -36,7 +36,7 @@ mybatis:
   database:
     type: mysql
 mybatis-plus:
-  mapper-locations: classpath*:/dao/mapper/*.xml,classpath*:com/gitee/sunchenbin/mybatis/actable/mapping/*/*.xml
+  mapper-locations: classpath*:/dao/mapper/*/*.xml,classpath*:com/gitee/sunchenbin/mybatis/actable/mapping/*/*.xml
 
 server:
   port: 6051
@@ -50,3 +50,7 @@ dingding:
   domain: "trump"
   process-instance-def-key: "ContractApplyForYnUnicomRebuild"
   process-filename: "dingdingContractRebuild.bpmn20.xml"
+  contract-saver-role-group: ""
+  contract-saver-role: "contractSaverRole"
+  contract-saver-role-id: "1444438399"
+  super-user-role: "superUser"

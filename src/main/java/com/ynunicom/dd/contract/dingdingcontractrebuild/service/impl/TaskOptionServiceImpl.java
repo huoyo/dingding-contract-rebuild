@@ -18,6 +18,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.HurryUpRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RoleService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.*;
@@ -70,6 +71,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Autowired
     TaskService taskService;
 
+    @Resource
+    RoleService roleService;
+
     @Override
     public Task taskVarLoadFromOutSide(Task task, ContractApplyRequestBody contractApplyRequestBody, String accessToken){
         Map<String,Object> map = taskService.getVariables(task.getId());
@@ -111,6 +115,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         map.put("applyUserId",contractApplyRequestBody.getOrganizerUserId());
         map.put("contract",new ContractInfoEntity(contractApplyRequestBody));
         map.put("currentIsOk",false);
+        map.put("contractSaverRole",appInfo.getContractSaverRole());
         taskService.setVariables(task.getId(),map);
         return task;
     }
@@ -149,6 +154,29 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         for (Task task :
                 taskList) {
             Map<String,Object> map = taskService.getVariables(task.getId());
+            map.put("taskId",task.getId());
+            map.put("taskStage",task.getName());
+            mapList.add(map);
+        }
+        jsonArray.addAll(mapList);
+        return jsonArray;
+    }
+
+    @Override
+    public JSONArray getByRole(String accessToken, String userId) {
+        List<String> roleList =  roleService.getRoleByUserId(userId,accessToken);
+        JSONArray jsonArray = new JSONArray();
+        Set<Task> taskSet = new HashSet<>();
+        for (String role:
+             roleList) {
+            List<Task> innerTaskList = taskService.createTaskQuery().taskCandidateUser(role).list();
+            taskSet.addAll(innerTaskList);
+        }
+        List<Task> taskList =  new ArrayList<>(taskSet);
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        for (Task task :
+                taskList) {
+            Map<String,Object> map  = taskService.getVariables(task.getId());
             map.put("taskId",task.getId());
             map.put("taskStage",task.getName());
             mapList.add(map);

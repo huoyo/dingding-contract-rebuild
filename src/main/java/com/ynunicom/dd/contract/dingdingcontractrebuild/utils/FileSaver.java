@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * @author: jinye.Bai
@@ -28,7 +29,8 @@ public class FileSaver {
         }
         File outFile = new File(filePath+'/'+fileName);
         if (outFile.exists()){
-            throw new BussException(fileName+"文件已经存在，创建失败");
+            String newFileName = filePath+"/"+ "["+System.currentTimeMillis()+"]"+fileName;
+            outFile = new File(newFileName);
         }
         InputStream inputStream = file.getInputStream();
         FileOutputStream fileOutputStream = new FileOutputStream(outFile);

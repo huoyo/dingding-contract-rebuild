@@ -21,4 +21,12 @@ public class AppInfo {
 
     private String domain;
 
+    private String contractSaverRole;
+
+    private String superUserRole;
+
+    private String contractSaverRoleGroup;
+
+    private String contractSaverRoleId;
+
 }

@@ -1,9 +1,11 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.utils;
 
+import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import lombok.Getter;
 import lombok.Setter;
 import org.flowable.engine.TaskService;
+import org.flowable.spring.boot.app.App;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -54,6 +56,10 @@ public class SpringHelper implements ApplicationContextAware {
 
     public static String getFilePath(){
         return (String) applicationContext.getBean("filePath");
+    }
+
+    public static AppInfo getAppInfo(){
+        return applicationContext.getBean(AppInfo.class);
     }
 
 }

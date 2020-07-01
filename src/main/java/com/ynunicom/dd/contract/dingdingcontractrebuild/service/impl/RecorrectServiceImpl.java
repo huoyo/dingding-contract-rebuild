@@ -128,11 +128,8 @@ public class RecorrectServiceImpl implements RecorrectService {
         task = taskOptionService.taskVarLoadFromOutSide(task,contractRecorrectRequestBody,accessToken);
         Map<String,Object> map = taskService.getVariables(task.getId());
 
-
         ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
-        String contractId = UUID.randomUUID().toString().replace("-","");
-        contractInfoEntity.setId(contractId);
-
+        String contractId = contractInfoEntity.getId();
 
         //附件1保存并上传钉盘,存入流程变量
         MultipartFile attachment = contractRecorrectRequestBody.getAttachment1();
@@ -232,10 +229,9 @@ public class RecorrectServiceImpl implements RecorrectService {
         }
 
         //合同变量存入数据库
-        contractInfoMapper.insert(contractInfoEntity);
+        contractInfoMapper.updateById(contractInfoEntity);
 
         //结束任务
-        runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
         return map;

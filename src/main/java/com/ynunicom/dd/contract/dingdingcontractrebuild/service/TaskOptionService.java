@@ -20,6 +20,8 @@ public interface TaskOptionService {
 
     public JSONArray getByApplyUserId(String accessToken , String applyUserId);
 
+    public JSONArray getByRole(String accessToken , String applyUserId);
+
     public Map<String, Object> startNewInst(ContractApplyRequestBody contractApplyRequestBody, String accessToken);
 
     public String hurryUp(String accessToken, HurryUpRequestBody hurryUpRequestBody);

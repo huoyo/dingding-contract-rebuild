@@ -30,6 +30,11 @@ public class TaskController {
         return ResponseDto.success(taskOptionService.getByApplyUserId(accessToken,userId));
     }
 
+    @GetMapping("/getByRole")
+    public ResponseDto getByRole(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId){
+        return ResponseDto.success(taskOptionService.getByRole(accessToken,userId));
+    }
+
     /**
      * data-form格式
      * @param contractApplyRequestBody
