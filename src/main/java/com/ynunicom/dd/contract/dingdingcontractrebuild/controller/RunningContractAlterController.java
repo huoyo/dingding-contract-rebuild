@@ -21,6 +21,16 @@ public class RunningContractAlterController {
     @Resource
     AlterService alterService;
 
+    /**
+     *
+     * @param contractAlterRequestBody    method只能为以下三种之一：
+     *                                    alter:修改
+     *                                    preEnd: 提前终止
+     *                                    continue: 续签
+     * @param accessToken
+     * @param userId
+     * @return
+     */
     @PostMapping
     public ResponseDto alter(ContractAlterRequestBody contractAlterRequestBody, @RequestParam("accessToken")String accessToken, @RequestParam("userId") String userId){
         return ResponseDto.success(alterService.alterApply(contractAlterRequestBody, accessToken, userId));

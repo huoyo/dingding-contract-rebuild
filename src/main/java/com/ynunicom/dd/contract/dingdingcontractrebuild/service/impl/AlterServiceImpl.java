@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntityForSelect;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTemplateEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoSelectMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractAlterRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
@@ -68,7 +71,13 @@ public class AlterServiceImpl implements AlterService {
     @Autowired
     ContractInfoMapper contractInfoMapper;
 
-    private Task taskVarLoad(Task task, ContractAlterRequestBody contractAlterRequestBody, String accessToken){
+    @Autowired
+    ContractInfoSelectMapper contractInfoSelectMapper;
+
+    @Resource
+    ProcessInstanceDefKey alterProcessInstanceDefKey;
+
+    private Task taskVarLoad(Task task, ContractAlterRequestBody contractAlterRequestBody,ContractInfoEntity beforeContractInfoEntity, String accessToken){
         Map<String,Object> map = new HashMap<>();
         List<String> userIdList = StringsToList.trans(contractAlterRequestBody.getReviewerList());
         List<JudgePersonEntity> judgePersonEntityList = new ArrayList<>();
@@ -89,9 +98,11 @@ public class AlterServiceImpl implements AlterService {
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }
+        ContractInfoEntity contractInfoEntity = new ContractInfoEntity(contractAlterRequestBody);
+        contractInfoEntity = (ContractInfoEntity) ContractInfoEntityMerge.merge(beforeContractInfoEntity,contractInfoEntity);
         map.put("stages",judgePersonEntityList);
         map.put("applyUserId",contractAlterRequestBody.getOrganizerUserId());
-        map.put("contract",new ContractInfoEntity(contractAlterRequestBody));
+        map.put("contract",contractInfoEntity);
         map.put("currentIsOk",false);
         taskService.setVariables(task.getId(),map);
         return task;
@@ -101,6 +112,9 @@ public class AlterServiceImpl implements AlterService {
     @Transactional
     @Override
     public Map<String, Object> alterApply(ContractAlterRequestBody contractAlterRequestBody, String accessToken, String userId) {
+        if (!"alter".equals(contractAlterRequestBody.getMethod())&&!"continue".equals(contractAlterRequestBody.getMethod())&&!"preEnd".equals(contractAlterRequestBody.getMethod())){
+            throw new BussException("请求方法不合理");
+        }
         String id = contractAlterRequestBody.getContractId();
         ContractInfoEntity beforeContractInfoEntity = contractInfoMapper.selectById(id);
         if (beforeContractInfoEntity==null||!"running".equals(beforeContractInfoEntity.getStatu())){
@@ -111,11 +125,11 @@ public class AlterServiceImpl implements AlterService {
         }
 
         //开启流程
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("ContractAlter");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(alterProcessInstanceDefKey.getKey());
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
 
         //开始塞入流程变量
-        task = taskVarLoad(task,contractAlterRequestBody,accessToken);
+        task = taskVarLoad(task,contractAlterRequestBody,beforeContractInfoEntity,accessToken);
         Map<String,Object> map = taskService.getVariables(task.getId());
         ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
 

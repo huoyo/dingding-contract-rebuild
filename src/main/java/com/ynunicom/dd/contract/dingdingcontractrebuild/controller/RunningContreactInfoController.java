@@ -48,7 +48,7 @@ public class RunningContreactInfoController {
      */
     @GetMapping
     public ResponseDto get(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId){
-        List<ContractInfoEntityForSelect> contractInfoEntityList = contractInfoSelectMapper.selectList(new LambdaQueryWrapper<ContractInfoEntityForSelect>().eq(ContractInfoEntityForSelect::getStatu,"running"));
+        List<ContractInfoEntityForSelect> contractInfoEntityList = contractInfoSelectMapper.selectList(new LambdaQueryWrapper<ContractInfoEntityForSelect>().eq(ContractInfoEntityForSelect::getStatu,"running").eq(ContractInfoEntityForSelect::getContractRunnerUserId,userId));
         return ResponseDto.success(contractInfoEntityList);
     }
 
@@ -71,7 +71,7 @@ public class RunningContreactInfoController {
         if (!flag){
             throw new BussException(userId+"用户不具有超级权限");
         }
-        List<ContractInfoEntityForSelect> contractInfoEntityList = contractInfoSelectMapper.selectList(new LambdaQueryWrapper<ContractInfoEntityForSelect>().eq(ContractInfoEntityForSelect::getStatu,"running"));
+        Page contractInfoEntityList = contractInfoSelectMapper.selectPage(page,new LambdaQueryWrapper<ContractInfoEntityForSelect>().eq(ContractInfoEntityForSelect::getStatu,"running"));
         return ResponseDto.success(contractInfoEntityList);
     }
 

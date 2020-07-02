@@ -27,7 +27,7 @@ public class PushFileTo {
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/cspace/add_to_single_chat?"+ WebUtils.buildQuery(request.getTextParams(),"utf-8"));
         OapiCspaceAddToSingleChatResponse response = client.execute(request, accessToken);
         if (!response.isSuccess()){
-            throw new BussException("失败");
+            throw new BussException(response.getErrmsg());
         }
         return true;
     }

@@ -8,12 +8,12 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/DD?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://127.0.0.1:3306/DD?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
           username: root
           password: bjy653300
           driver-class-name: com.mysql.cj.jdbc.Driver
         slave:
-          url: jdbc:mysql://127.0.0.1:3306/contract?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://127.0.0.1:3306/contract?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
           username: root
           password: bjy653300
           driver-class-name: com.mysql.cj.jdbc.Driver
@@ -48,8 +48,10 @@ dingding:
   agent-id: "809746748"
   corp-Id: "dingc25328cad366b400a39a90f97fcb1e09"
   domain: "trump"
-  process-instance-def-key: "ContractApplyForYnUnicomRebuild"
-  process-filename: "dingdingContractRebuild.bpmn20.xml"
+  start-process-instance-def-key: "ContractApplyForYnUnicomRebuild"
+  start-process-filename: "dingdingContractRebuild.bpmn20.xml"
+  alter-process-instance-def-key: "ContractContinue"
+  alter-process-filename: "dingdingContractRebuildAlterApplication.bpmn20.xml"
   contract-saver-role-group: ""
   contract-saver-role: "contractSaverRole"
   contract-saver-role-id: "1444438399"

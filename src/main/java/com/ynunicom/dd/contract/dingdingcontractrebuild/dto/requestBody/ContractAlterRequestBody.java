@@ -19,15 +19,4 @@ public class ContractAlterRequestBody extends  ContractApplyRequestBody{
 
     String reason;
 
-    @NotBlank
-    private  String organizerUserId;
-
-    @NotBlank
-    private String organizerName;
-
-    @NotBlank
-    private String reviewerList;
-
-    @NotBlank
-    private String finalReviewerList;
 }

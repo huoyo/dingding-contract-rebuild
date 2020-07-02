@@ -15,6 +15,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoM
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.HurryUpRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
@@ -74,6 +75,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Resource
     RoleService roleService;
 
+    @Resource
+    ProcessInstanceDefKey startProcessInstanceDefKey;
+
     @Override
     public Task taskVarLoadFromOutSide(Task task, ContractApplyRequestBody contractApplyRequestBody, String accessToken){
         Map<String,Object> map = taskService.getVariables(task.getId());
@@ -83,7 +87,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         /**
          * 这里要把contractInfoEntityBefore和contractInfoEntityComming整合起来
          */
-        contractInfoEntityBefore = ContractInfoEntityMerge.merge(contractInfoEntityBefore,contractInfoEntityComming);
+        contractInfoEntityBefore = (ContractInfoEntity) ContractInfoEntityMerge.merge(contractInfoEntityBefore,contractInfoEntityComming);
         map.put("contract",contractInfoEntityBefore);
         map.put("currentIsOk",false);
         taskService.setVariables(task.getId(),map);
@@ -188,7 +192,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Transactional
     @Override
     public Map<String, Object> startNewInst(ContractApplyRequestBody contractApplyRequestBody, String accessToken) {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("ContractApplyForYnUnicomRebuild");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(startProcessInstanceDefKey.getKey());
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
         if (task==null){
             throw new FlowableObjectNotFoundException("任务创建失败");

@@ -9,6 +9,7 @@ import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -18,10 +19,11 @@ import java.util.Date;
  * @author: jinye.Bai
  * @date: 2020/6/18 9:56
  */
+@NoArgsConstructor
 @Data
 @TableName(value = "CONTRACT_INFO")
 @Table(name = "CONTRACT_INFO")
-public class ContractInfoEntity extends BaseModel implements Serializable{
+public class ContractInfoEntity extends BaseModel implements Serializable,EntityFatherForMerge{
 
     @Column(name = "id", type = MySqlTypeConstant.VARCHAR, isNull = false,
             isKey = true, comment = "id")
@@ -119,22 +121,22 @@ public class ContractInfoEntity extends BaseModel implements Serializable{
     private String attachmentFilePath1;
 
     @Column(name = "attachmentDingPanid2",type = MySqlTypeConstant.VARCHAR,
-            comment = "附件1存储钉盘id")
+            comment = "附件2存储钉盘id")
     @TableField("attachmentDingPanid2")
     private String attachmentDingPanid2;
 
     @Column(name = "attachmentFilePath2",type = MySqlTypeConstant.VARCHAR,
-            comment = "附件1存储路径")
+            comment = "附件2存储路径")
     @TableField("attachmentFilePath2")
     private String attachmentFilePath2;
 
     @Column(name = "attachmentDingPanid3",type = MySqlTypeConstant.VARCHAR,
-            comment = "附件1存储钉盘id")
+            comment = "附件3存储钉盘id")
     @TableField("attachmentDingPanid3")
     private String attachmentDingPanid3;
 
     @Column(name = "attachmentFilePath3",type = MySqlTypeConstant.VARCHAR,
-            comment = "附件1存储路径")
+            comment = "附件3存储路径")
     @TableField("attachmentFilePath3")
     private String attachmentFilePath3;
 

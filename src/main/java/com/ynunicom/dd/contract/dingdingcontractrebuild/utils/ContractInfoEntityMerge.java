@@ -1,6 +1,7 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.utils;
 
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.EntityFatherForMerge;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ import java.util.Date;
 public class ContractInfoEntityMerge {
 
     @SneakyThrows
-    public static ContractInfoEntity merge(ContractInfoEntity before, ContractInfoEntity comming){
+    public static EntityFatherForMerge merge(EntityFatherForMerge before, EntityFatherForMerge comming){
             Field[] beforeFields = before.getClass().getDeclaredFields();
             Field[] commingFields = comming.getClass().getDeclaredFields();
             for (int i = 0;i<commingFields.length;i++){
