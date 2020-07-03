@@ -31,9 +31,9 @@
         <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.SkipTaskListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="saveContract" name="合同管理员">
+    <userTask id="saveContract" name="合同管理员" flowable:candidateUsers="${contractSaverRole}">
       <extensionElements>
-        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushListener"></flowable:taskListener>
+        <flowable:taskListener event="create" class="com.ynunicom.dd.contract.dingdingcontractrebuild.tasklistener.MsgPushForContractSaverListener"></flowable:taskListener>
       </extensionElements>
     </userTask>
     <endEvent id="sid-9482F43F-431D-469C-8496-F35D956F98C2"></endEvent>

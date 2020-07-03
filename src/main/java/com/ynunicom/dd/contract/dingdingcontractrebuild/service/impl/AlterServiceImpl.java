@@ -104,6 +104,7 @@ public class AlterServiceImpl implements AlterService {
         map.put("applyUserId",contractAlterRequestBody.getOrganizerUserId());
         map.put("contract",contractInfoEntity);
         map.put("currentIsOk",false);
+        map.put("contractSaverRole",appInfo.getContractSaverRole());
         taskService.setVariables(task.getId(),map);
         return task;
     }
@@ -235,8 +236,12 @@ public class AlterServiceImpl implements AlterService {
 
         //结束任务
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),id);
+        contractInfoEntity.setStatu(contractAlterRequestBody.getMethod()+"ing");
+        contractInfoEntity.setSign(0);
+        contractInfoEntity.setSave(0);
         map.put("contract",contractInfoEntity);
         map.put("method",contractAlterRequestBody.getMethod());
+        map.put("alterReason",contractAlterRequestBody.getReason());
         taskService.complete(task.getId(),map);
         return map;
     }

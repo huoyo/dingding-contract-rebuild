@@ -10,6 +10,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.TaskIdRe
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RoleService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.MsgSender;
 import lombok.SneakyThrows;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.Task;
@@ -83,7 +84,18 @@ public class ContractSaverController {
         contractInfoEntity.setSignName(userName);
         contractInfoMapper.updateById(contractInfoEntity);
         if (contractInfoEntity.getSave()==1){
-            contractInfoEntity.setStatu("running");
+            if ("altering".equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu("running");
+            }
+            else if ("continueing".equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu("running");
+            }
+            else if ("preEnding".equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu("preEnded");
+            }
+            else{
+                contractInfoEntity.setStatu("running");
+            }
             map.put("contract",contractInfoEntity);
             map.put("currentIsOk",true);
             contractInfoMapper.updateById(contractInfoEntity);
@@ -113,7 +125,18 @@ public class ContractSaverController {
         contractInfoEntity.setSaveName(userName);
         contractInfoMapper.updateById(contractInfoEntity);
         if (contractInfoEntity.getSign()==1){
-            contractInfoEntity.setStatu("running");
+            if ("altering".equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu("running");
+            }
+            else if ("continueing".equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu("running");
+            }
+            else if ("preEnding".equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu("preEnded");
+            }
+            else{
+                contractInfoEntity.setStatu("running");
+            }
             map.put("contract",contractInfoEntity);
             map.put("currentIsOk",true);
             contractInfoMapper.updateById(contractInfoEntity);
@@ -136,6 +159,9 @@ public class ContractSaverController {
         Map<String,Object> map = taskService.getVariables(contractSaverRefulseRequestBody.getTaskId());
         map.put("contractSaverComment",contractSaverRefulseRequestBody.getComment());
         map.put("currentIsOk",false);
+        if (!MsgSender.send(accessToken,userId,appInfo)) {
+            throw new BussException("消息发送失败");
+        }
         taskService.complete(contractSaverRefulseRequestBody.getTaskId(),map);
         return ResponseDto.success("合同已成功驳回");
     }
