@@ -39,7 +39,7 @@ public class TemplateUploadController {
 
     @SneakyThrows
     @PostMapping
-    public void post(ContractTemplateUploadRequestBody contractTemplateUploadRequestBody,@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId){
+    public ResponseDto post(ContractTemplateUploadRequestBody contractTemplateUploadRequestBody,@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId){
         if (contractTemplateUploadRequestBody.getFile().isEmpty()){
             throw new BussException("上传文件为空");
         }
@@ -48,6 +48,7 @@ public class TemplateUploadController {
         contractTemplateEntity.setFilePath(fileName);
         contractTemplateMapper.insert(contractTemplateEntity);
         log.info(fileName+"，模板文件新增");
+        return ResponseDto.success(fileName+"新增完成");
     }
 
     @SneakyThrows

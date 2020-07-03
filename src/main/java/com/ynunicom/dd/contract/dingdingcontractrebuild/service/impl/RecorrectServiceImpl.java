@@ -180,6 +180,9 @@ public class RecorrectServiceImpl implements RecorrectService {
         //合同模板上传钉盘，存入流程变量
         if (!contractRecorrectRequestBody.getStandTemplateId().isEmpty()){
             ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractRecorrectRequestBody.getStandTemplateId());
+            if (contractTemplateEntity==null){
+                throw new BussException("合同模板不存在");
+            }
             String templateFileName = contractTemplateEntity.getFilePath();
             String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
             if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),templateMediaId,templateFileName,accessToken,appInfo)){

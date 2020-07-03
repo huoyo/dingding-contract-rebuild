@@ -29,7 +29,7 @@ public class FileSaver {
         }
         File outFile = new File(filePath+'/'+fileName);
         if (outFile.exists()){
-            String newFileName = filePath+"/"+ "["+System.currentTimeMillis()+"]"+fileName;
+            String newFileName = filePath+"/"+System.currentTimeMillis()+ fileName;
             outFile = new File(newFileName);
         }
         InputStream inputStream = file.getInputStream();
