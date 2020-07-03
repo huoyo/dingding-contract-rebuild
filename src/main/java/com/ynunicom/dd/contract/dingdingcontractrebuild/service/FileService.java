@@ -14,4 +14,6 @@ public interface FileService {
     public HttpServletResponse getPdf(String accessToken, String fileName, HttpServletResponse httpServletResponse,String userId);
 
     public HttpServletResponse getOther(String accessToken, String fileName, HttpServletResponse httpServletResponse,String userId);
+
+    public boolean push(String accessToken, String mediaId, String fileName, String recvUserId);
 }

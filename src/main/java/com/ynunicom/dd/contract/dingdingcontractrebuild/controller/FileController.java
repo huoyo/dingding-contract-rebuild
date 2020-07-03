@@ -1,10 +1,8 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.FileService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +31,14 @@ public class FileController {
     @GetMapping("/other")
     public void other(@RequestParam("accessToken")String accessToken, @RequestParam("fileName")String fileName, @RequestParam("userId")String userId,HttpServletResponse httpServletResponse){
         httpServletResponse = fileService.getOther(accessToken,fileName,httpServletResponse,userId);
+    }
+
+    @PostMapping("/push")
+    public ResponseDto push(@RequestParam("accessToken")String accessToken, String mediaId, String fileName,@RequestParam("userId")String userId,@RequestParam("recvUserId")String recvUserId){
+        if (fileService.push(accessToken,mediaId,fileName,recvUserId)){
+            return ResponseDto.success("推送成功");
+        }
+        return ResponseDto.failed("推送失败");
     }
 
 }

@@ -307,6 +307,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         contractInfoMapper.insert(contractInfoEntity);
 
         //结束任务
+
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);

@@ -1,11 +1,17 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.FileService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.DocToPDF;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UserVerify;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: jinye.Bai
@@ -26,7 +34,13 @@ public class FileServiceImpl implements FileService {
     String filePath;
 
     @Resource
+    AppInfo appInfo;
+
+    @Resource
     UserInfoService userInfoService;
+
+    @Autowired
+    ContractInfoMapper contractInfoMapper;
 
     @SneakyThrows
     private HttpServletResponse get(String accessToken, String fileName, HttpServletResponse httpServletResponse, String userId,boolean fileType){
@@ -109,5 +123,10 @@ public class FileServiceImpl implements FileService {
         outputStream.close();
         fileInputStream.close();
         return httpServletResponse;
+    }
+
+    @Override
+    public boolean push(String accessToken, String mediaId,String fileName, String recvUserId) {
+        return PushFileTo.pushToUser(recvUserId, mediaId, fileName , accessToken, appInfo);
     }
 }
