@@ -12,6 +12,12 @@ import javax.validation.constraints.NotBlank;
 public class ContractAlterRequestBody extends  ContractApplyRequestBody{
 
     @NotBlank
+    private  String organizerUserId;
+
+    @NotBlank
+    private String organizerName;
+
+    @NotBlank
     String  contractId;
 
     @NotBlank

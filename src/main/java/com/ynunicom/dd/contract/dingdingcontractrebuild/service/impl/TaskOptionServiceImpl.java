@@ -309,6 +309,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         //结束任务
 
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
+        contractInfoEntity.setStatu("applying");
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
         return map;

@@ -19,4 +19,7 @@ public interface ContractInfoMapper extends BaseMapper<ContractInfoEntity> {
             "contractTextFilePath = #{fileName} or attachmentFilePath1 = #{fileName} or attachmentFilePath2 = #{fileName} or" +
             "attachmentFilePath3 = #{fileName}")
     public ContractInfoEntity fileSelect(@Param("fileName") String fileName);
+
+    @Select("select * from CONTRACT_INFO where statu = 'running' and NOW()>endTime")
+    public List<ContractInfoEntity> selectShouldEndByTime();
 }

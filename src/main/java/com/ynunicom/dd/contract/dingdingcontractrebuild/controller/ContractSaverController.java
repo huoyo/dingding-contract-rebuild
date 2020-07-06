@@ -159,7 +159,7 @@ public class ContractSaverController {
         Map<String,Object> map = taskService.getVariables(contractSaverRefulseRequestBody.getTaskId());
         map.put("contractSaverComment",contractSaverRefulseRequestBody.getComment());
         map.put("currentIsOk",false);
-        if (!MsgSender.send(accessToken,userId,appInfo)) {
+        if (!MsgSender.send(accessToken,userId,appInfo,"您的合同审批被驳回，请进入应用查看")) {
             throw new BussException("消息发送失败");
         }
         taskService.complete(contractSaverRefulseRequestBody.getTaskId(),map);

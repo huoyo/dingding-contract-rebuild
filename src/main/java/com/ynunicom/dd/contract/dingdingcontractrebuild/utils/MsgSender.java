@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class MsgSender {
     @SneakyThrows
-    public static boolean send(String accessToken, String userId, AppInfo appInfo){
+    public static boolean send(String accessToken, String userId, AppInfo appInfo,String Msg){
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
 
         OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
@@ -27,7 +27,7 @@ public class MsgSender {
         OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
         msg.setMsgtype("text");
         msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
-        msg.getText().setContent(new Date()+"你的合同审批事项被驳回，请进入应用查看");
+        msg.getText().setContent(new Date()+Msg);
         request.setMsg(msg);
         OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request,accessToken);
         if (!response.isSuccess()){
