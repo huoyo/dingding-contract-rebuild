@@ -13,6 +13,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTemplateEnti
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
@@ -309,7 +310,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         //结束任务
 
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
-        contractInfoEntity.setStatu("applying");
+        contractInfoEntity.setStatu(ContractInfoStatus.APPLYING);
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
         return map;

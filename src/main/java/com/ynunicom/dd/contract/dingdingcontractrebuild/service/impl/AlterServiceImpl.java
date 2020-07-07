@@ -10,6 +10,8 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMap
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoSelectMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.MethodStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
@@ -113,12 +115,12 @@ public class AlterServiceImpl implements AlterService {
     @Transactional
     @Override
     public Map<String, Object> alterApply(ContractAlterRequestBody contractAlterRequestBody, String accessToken, String userId) {
-        if (!"alter".equals(contractAlterRequestBody.getMethod())&&!"continue".equals(contractAlterRequestBody.getMethod())&&!"preEnd".equals(contractAlterRequestBody.getMethod())){
+        if (!MethodStatus.ALTER.equals(contractAlterRequestBody.getMethod())&&!MethodStatus.CONTINUE.equals(contractAlterRequestBody.getMethod())&&!MethodStatus.PREEND.equals(contractAlterRequestBody.getMethod())){
             throw new BussException("请求方法不合理");
         }
         String id = contractAlterRequestBody.getContractId();
         ContractInfoEntity beforeContractInfoEntity = contractInfoMapper.selectById(id);
-        if (beforeContractInfoEntity==null||!"running".equals(beforeContractInfoEntity.getStatu())){
+        if (beforeContractInfoEntity==null||!ContractInfoStatus.RUNNING.equals(beforeContractInfoEntity.getStatu())){
             throw new BussException("合同id"+contractAlterRequestBody.getContractId()+"不在履行中");
         }
         if (!userId.equals(beforeContractInfoEntity.getContractRunnerUserId())){
