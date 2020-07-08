@@ -41,7 +41,7 @@ public class AttachmentEntity extends BaseModel {
     private String contractInfoId;
 
     @NonNull
-    @Column(name = "contractTemplateId",type = MySqlTypeConstant.VARCHAR,isNull = false
+    @Column(name = "contractTemplateId",type = MySqlTypeConstant.VARCHAR
             ,comment = "合同模板id")
     @TableField("contractTemplateId")
     private String contractTemplateId;

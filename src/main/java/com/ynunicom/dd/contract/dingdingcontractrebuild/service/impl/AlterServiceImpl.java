@@ -87,7 +87,7 @@ public class AlterServiceImpl implements AlterService {
                 userIdList){
             JSONObject jsonObject = userInfoService.getUserInfo(accessToken,userId);
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
-            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"));
+            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"),jsonObject.getJSONArray("department").toJSONString());
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntity.setIsOk(false);
             judgePersonEntityList.add(judgePersonEntity);
@@ -96,7 +96,7 @@ public class AlterServiceImpl implements AlterService {
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
             judgePersonEntity.setIsOk(true);
             judgePersonEntity.setComment("null");
-            PersonEntity personEntity = new PersonEntity("null","null","null");
+            PersonEntity personEntity = new PersonEntity("null","null","null","null");
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }
@@ -144,7 +144,7 @@ public class AlterServiceImpl implements AlterService {
             if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,contractAlterRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
@@ -159,7 +159,7 @@ public class AlterServiceImpl implements AlterService {
             if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,contractAlterRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
@@ -174,7 +174,7 @@ public class AlterServiceImpl implements AlterService {
             if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,contractAlterRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
@@ -183,17 +183,15 @@ public class AlterServiceImpl implements AlterService {
 
 
         //合同模板上传钉盘，存入流程变量
-        if (!contractAlterRequestBody.getStandTemplateId().isEmpty()){
-            ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractAlterRequestBody.getStandTemplateId());
-            if (contractTemplateEntity==null){
-                throw new BussException("合同模板不存在");
+        MultipartFile standTemplate = contractAlterRequestBody.getStandTemplate();
+        if (standTemplate!=null&&!standTemplate.isEmpty()){
+            String standTemplateFileName = FileSaver.save(filePath,standTemplate);
+            String standTemplateMediaId = uploadToDingPan.doUpload(standTemplateFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),standTemplateMediaId,standTemplateFileName,accessToken,appInfo)){
+                log.info("文件:"+standTemplateFileName+",mediaId:"+standTemplateMediaId+",推送失败");
             }
-            String templateFileName = contractTemplateEntity.getFilePath();
-            String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),templateMediaId,templateFileName,accessToken,appInfo)){
-                log.info("文件:"+templateFileName+",mediaId:"+templateMediaId+",推送失败");
-            }
-            contractInfoEntity.setStandTemplateDingPanId(templateMediaId);
+            contractInfoEntity.setStandTemplateDingPanId(standTemplateMediaId);
+            contractInfoEntity.setStandTemplateFilePath(standTemplateFileName);
         }
 
 
@@ -207,19 +205,6 @@ public class AlterServiceImpl implements AlterService {
             }
             contractInfoEntity.setTheirQualityFilePath(qualityFileName);
             contractInfoEntity.setTheirQualityDingPanId(qualityFileMediaId);
-        }
-
-
-        //不使用标准模板的说明文件保存并上传钉盘，存入流程变量
-        if (!contractAlterRequestBody.getReasonOfNotUsingStandTemplate().isEmpty()){
-            MultipartFile reason = contractAlterRequestBody.getReasonOfNotUsingStandTemplate();
-            String reasonFileName = FileSaver.save(filePath,reason);
-            String reasonMediaId = uploadToDingPan.doUpload(reasonFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),reasonMediaId,reasonFileName,accessToken,appInfo)){
-                log.info("文件:"+reasonFileName+",mediaId:"+reasonMediaId+",推送失败");
-            }
-            contractInfoEntity.setReasonOfNotUsingStandTemplateFilePath(reasonFileName);
-            contractInfoEntity.setReasonOfNotUsingStandTemplateDingPanId(reasonMediaId);
         }
 
         //合同正文保存并上传钉盘，存入流程变量

@@ -42,6 +42,10 @@ server:
   port: 6051
 
 dingding:
+  manager-Id: ""
+  viceManager-Id: ""
+  legal-Dept-Id: ""
+  financial-Dept-Id: ""
   nonceStr: "nice_peacefully_day"
   app-key: "dingpcgfojft6nw4ifdi"
   app-secret: "Crt31CokHxEOSKsuUxIWrZIAwcvdTgx0007KQRk8uTI5UbP8GLtdoviNvBkvfaGy"

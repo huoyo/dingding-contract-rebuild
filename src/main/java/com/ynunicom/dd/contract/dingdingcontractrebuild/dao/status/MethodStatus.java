@@ -6,6 +6,8 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status;
  */
 public interface MethodStatus {
 
+    String APPLY = "apply";
+
     String ALTER = "alter";
 
     String CONTINUE = "continue";

@@ -11,6 +11,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.Contract
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -90,15 +91,10 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField("standTemplateDingPanId")
     private String standTemplateDingPanId;
 
-    @Column(name = "reasonOfNotUsingStandTemplateDingPanId",type = MySqlTypeConstant.VARCHAR,
-            comment = "标准合同模板未使用的原因说明文件存储钉盘id")
-    @TableField("reasonOfNotUsingStandTemplateDingPanId")
-    private String reasonOfNotUsingStandTemplateDingPanId;
-
-    @Column(name = "reasonOfNotUsingStandTemplateFilePath",type = MySqlTypeConstant.VARCHAR,
-            comment = "标准合同模板未使用的原因说明文件存储路径")
-    @TableField("reasonOfNotUsingStandTemplateFilePath")
-    private String reasonOfNotUsingStandTemplateFilePath;
+    @Column(name = "standTemplateFilePath",type = MySqlTypeConstant.VARCHAR,
+            comment = "标准合同模板储存路径")
+    @TableField("standTemplateFilePath")
+    private String standTemplateFilePath;
 
     @Column(name = "contractTextFilePath",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "合同正文储存路径")
@@ -236,6 +232,21 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField("statu")
     private String statu;
 
+    @Column(name = "preContractId",type = MySqlTypeConstant.VARCHAR,
+            comment = "修改之前的原合同id")
+    @TableField("preContractId")
+    private String preContractId;
+
+    @Column(name = "method",type = MySqlTypeConstant.VARCHAR,
+            comment = "合同的操作方法")
+    @TableField("method")
+    private String method;
+
+    @Column(name = "prop",type = MySqlTypeConstant.INT,
+            comment = "四大类的哪一种,1代表战略框架合作，2支出类框架协议，3支出类固定金额合同，4收入类合同")
+    @TableField("prop")
+    private Integer prop;
+
     public ContractInfoEntity(ContractApplyRequestBody contractApplyRequestBody){
         this.contactPhone = contractApplyRequestBody.getContactPhone();
         this.contractName = contractApplyRequestBody.getContractName();
@@ -251,7 +262,6 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
         this.organizerName = contractApplyRequestBody.getOrganizerName();
         this.organizers = contractApplyRequestBody.getOrganizers();
         this.organizerUserId = contractApplyRequestBody.getOrganizerUserId();
-        this.standTemplateFileId = contractApplyRequestBody.getStandTemplateId();
         this.stratTime = new Date(contractApplyRequestBody.getStartTime());
         this.endTime = new Date(contractApplyRequestBody.getEndTime());
         this.reviewerList = contractApplyRequestBody.getReviewerList();
@@ -259,5 +269,8 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
         this.theWayTheyChoice = contractApplyRequestBody.getTheWayTheyChoice();
         this.theWayToPay = contractApplyRequestBody.getTheWayToPay();
         this.useageOfStandTemplate = contractApplyRequestBody.getUseageOfStandTemplate();
+        this.preContractId = contractApplyRequestBody.getPreContractId();
+        this.method = contractApplyRequestBody.getMethod();
+        this.prop = contractApplyRequestBody.getProp();
     }
 }

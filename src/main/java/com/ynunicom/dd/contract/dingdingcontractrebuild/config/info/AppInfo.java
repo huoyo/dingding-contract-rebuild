@@ -29,4 +29,12 @@ public class AppInfo {
 
     private String contractSaverRoleId;
 
+    private String financialDeptId;
+
+    private String viceManagerId;
+
+    private String managerId;
+
+    private String legalDeptId;
+
 }

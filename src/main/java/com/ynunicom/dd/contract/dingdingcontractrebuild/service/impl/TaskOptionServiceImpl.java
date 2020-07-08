@@ -103,19 +103,42 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         userIdList){
             JSONObject jsonObject = userInfoService.getUserInfo(accessToken,userId);
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
-            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"));
+            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"),jsonObject.getJSONArray("department").toJSONString());
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntity.setIsOk(false);
             judgePersonEntityList.add(judgePersonEntity);
         }
-        while (judgePersonEntityList.size()<7){
+        while (judgePersonEntityList.size()<9){
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
             judgePersonEntity.setIsOk(true);
             judgePersonEntity.setComment("null");
-            PersonEntity personEntity = new PersonEntity("null","null","null");
+            PersonEntity personEntity = new PersonEntity("null","null","null","null");
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }
+
+
+        //塞入最终审核人
+        if (contractApplyRequestBody.getFinalReviewerList()!=null&&!contractApplyRequestBody.getFinalReviewerList().isEmpty()){
+            String finalReviewer = contractApplyRequestBody.getFinalReviewerList();
+            JSONObject finalReviewerJson = userInfoService.getUserInfo(accessToken,finalReviewer);
+            JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
+            judgePersonEntity.setIsOk(false);
+            PersonEntity personEntity = new PersonEntity(finalReviewerJson.getString("name"),finalReviewer,finalReviewerJson.getString("avatar"),finalReviewerJson.getJSONArray("department").toJSONString());
+            judgePersonEntity.setPersonEntity(personEntity);
+            judgePersonEntityList.add(judgePersonEntity);
+        }
+        else {
+            JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
+            judgePersonEntity.setIsOk(true);
+            judgePersonEntity.setComment("null");
+            PersonEntity personEntity = new PersonEntity("null","null","null","null");
+            judgePersonEntity.setPersonEntity(personEntity);
+            judgePersonEntityList.add(judgePersonEntity);
+        }
+
+
+
         map.put("stages",judgePersonEntityList);
         map.put("applyUserId",contractApplyRequestBody.getOrganizerUserId());
         map.put("contract",new ContractInfoEntity(contractApplyRequestBody));
@@ -194,6 +217,14 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Transactional
     @Override
     public Map<String, Object> startNewInst(ContractApplyRequestBody contractApplyRequestBody, String accessToken) {
+        ContractInfoEntity preContractInfoEntity = null;
+        if (contractApplyRequestBody.getPreContractId()!=null&&!contractApplyRequestBody.getPreContractId().isEmpty()){
+            preContractInfoEntity = contractInfoMapper.selectById(contractApplyRequestBody.getPreContractId());
+            if (preContractInfoEntity==null){
+                throw new BussException("历史合同"+contractApplyRequestBody.getPreContractId()+"不存在");
+            }
+        }
+
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(startProcessInstanceDefKey.getKey());
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
         if (task==null){
@@ -216,7 +247,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
@@ -231,7 +262,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
@@ -246,7 +277,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractApplyRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
@@ -255,17 +286,15 @@ public class TaskOptionServiceImpl implements TaskOptionService {
 
 
         //合同模板上传钉盘，存入流程变量
-        if (!contractApplyRequestBody.getStandTemplateId().isEmpty()){
-            ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractApplyRequestBody.getStandTemplateId());
-            if (contractTemplateEntity==null){
-                throw new BussException("合同模板不存在");
+        MultipartFile standTemplate = contractApplyRequestBody.getStandTemplate();
+        if (standTemplate!=null&&!standTemplate.isEmpty()){
+            String standTemplateFileName = FileSaver.save(filePath,standTemplate);
+            String standTemplateMediaId = uploadToDingPan.doUpload(standTemplateFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),standTemplateMediaId,standTemplateFileName,accessToken,appInfo)){
+                log.info("文件:"+standTemplateFileName+",mediaId:"+standTemplateMediaId+",推送失败");
             }
-            String templateFileName = contractTemplateEntity.getFilePath();
-            String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),templateMediaId,templateFileName,accessToken,appInfo)){
-                log.info("文件:"+templateFileName+",mediaId:"+templateMediaId+",推送失败");
-            }
-            contractInfoEntity.setStandTemplateDingPanId(templateMediaId);
+            contractInfoEntity.setStandTemplateDingPanId(standTemplateMediaId);
+            contractInfoEntity.setStandTemplateFilePath(standTemplateFileName);
         }
 
 
@@ -279,18 +308,6 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         contractInfoEntity.setTheirQualityFilePath(qualityFileName);
         contractInfoEntity.setTheirQualityDingPanId(qualityFileMediaId);
 
-
-        //不使用标准模板的说明文件保存并上传钉盘，存入流程变量
-        MultipartFile reason = contractApplyRequestBody.getReasonOfNotUsingStandTemplate();
-        String reasonFileName = FileSaver.save(filePath,reason);
-        if (reasonFileName!=null){
-            String reasonMediaId = uploadToDingPan.doUpload(reasonFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),reasonMediaId,reasonFileName,accessToken,appInfo)){
-                log.info("文件:"+reasonFileName+",mediaId:"+reasonMediaId+",推送失败");
-            }
-            contractInfoEntity.setReasonOfNotUsingStandTemplateFilePath(reasonFileName);
-            contractInfoEntity.setReasonOfNotUsingStandTemplateDingPanId(reasonMediaId);
-        }
 
         //合同正文保存并上传钉盘，存入流程变量
         MultipartFile contractText = contractApplyRequestBody.getContractText();
@@ -307,10 +324,15 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         //合同变量存入数据库
         contractInfoMapper.insert(contractInfoEntity);
 
-        //结束任务
 
+
+        //结束任务
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
+        if (preContractInfoEntity!=null){
+            contractInfoEntity.setPreContractId(preContractInfoEntity.getId());
+        }
         contractInfoEntity.setStatu(ContractInfoStatus.APPLYING);
+        map.put("method",contractApplyRequestBody.getMethod());
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
         return map;

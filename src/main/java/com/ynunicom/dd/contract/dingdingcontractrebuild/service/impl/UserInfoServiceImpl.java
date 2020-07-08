@@ -66,7 +66,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         for (String userId :
                 userIdList) {
             JSONObject innerJson = getUserInfo(accessToken, userId);
-            PersonEntity personEntity = new PersonEntity(innerJson.getString("name"),innerJson.getString("userid"),innerJson.getString("avatar"));
+            PersonEntity personEntity = new PersonEntity(innerJson.getString("name"),innerJson.getString("userid"),innerJson.getString("avatar"),innerJson.getJSONArray("department").toJSONString());
             jsonArray.add(personEntity);
         }
         return jsonArray;

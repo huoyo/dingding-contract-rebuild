@@ -24,5 +24,6 @@ public class PersonEntity implements Serializable {
      */
     private String avatar;
 
+    private String deptId;
 
 }

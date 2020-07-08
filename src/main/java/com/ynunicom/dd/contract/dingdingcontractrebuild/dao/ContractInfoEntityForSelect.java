@@ -170,7 +170,6 @@ public class ContractInfoEntityForSelect extends BaseModel implements EntityFath
                 this.organizerName = contractAlterRequestBody.getOrganizerName();
                 this.organizers = contractAlterRequestBody.getOrganizers();
                 this.organizerUserId = contractAlterRequestBody.getOrganizerUserId();
-                this.standTemplateFileId = contractAlterRequestBody.getStandTemplateId();
                 this.stratTime = new Date(contractAlterRequestBody.getStartTime());
                 this.endTime = new Date(contractAlterRequestBody.getEndTime());
                 this.reviewerList = contractAlterRequestBody.getReviewerList();

@@ -42,6 +42,18 @@ public class AppInfoConfig {
     @Value("${dingding.contract-saver-role-id}")
     String contractSaverRoleId;
 
+    @Value("${dingding.financial-Dept-Id}")
+    String financialDeptId;
+
+    @Value("${dingding.legal-Dept-Id}")
+    String legalDeptId;
+
+    @Value("${dingding.viceManager-Id}")
+    String viceManagerId;
+
+    @Value("${dingding.manager-Id}")
+    String managerId;
+
 
     @Bean("appInfo")
     public AppInfo appInfo(){
@@ -56,6 +68,10 @@ public class AppInfoConfig {
         appInfo.setSuperUserRole(superUserRole);
         appInfo.setContractSaverRoleGroup(contractSaverRoleGroup);
         appInfo.setContractSaverRoleId(contractSaverRoleId);
+        appInfo.setFinancialDeptId(financialDeptId);
+        appInfo.setLegalDeptId(legalDeptId);
+        appInfo.setViceManagerId(viceManagerId);
+        appInfo.setManagerId(managerId);
         return appInfo;
     }
 

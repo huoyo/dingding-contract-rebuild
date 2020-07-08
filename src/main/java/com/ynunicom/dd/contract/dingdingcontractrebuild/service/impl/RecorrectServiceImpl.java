@@ -87,9 +87,6 @@ public class RecorrectServiceImpl implements RecorrectService {
         if (!OtherDeletor.delete(contractInfoEntity.getTheirQualityFilePath())){
             log.info(contractInfoEntity.getTheirQualityFilePath()+"删除失败");
         }
-        if (!OtherDeletor.delete(contractInfoEntity.getReasonOfNotUsingStandTemplateFilePath())){
-            log.info(contractInfoEntity.getReasonOfNotUsingStandTemplateFilePath()+"删除失败");
-        }
         if (!OtherDeletor.delete(contractInfoEntity.getAttachmentFilePath1())){
             log.info(contractInfoEntity.getAttachmentFilePath1()+"删除失败");
         }
@@ -139,7 +136,7 @@ public class RecorrectServiceImpl implements RecorrectService {
             if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractRecorrectRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
@@ -154,7 +151,7 @@ public class RecorrectServiceImpl implements RecorrectService {
             if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractRecorrectRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
@@ -169,7 +166,7 @@ public class RecorrectServiceImpl implements RecorrectService {
             if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,contractRecorrectRequestBody.getStandTemplateId(),attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
@@ -178,17 +175,15 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //合同模板上传钉盘，存入流程变量
-        if (!contractRecorrectRequestBody.getStandTemplateId().isEmpty()){
-            ContractTemplateEntity contractTemplateEntity = contractTemplateMapper.selectById(contractRecorrectRequestBody.getStandTemplateId());
-            if (contractTemplateEntity==null){
-                throw new BussException("合同模板不存在");
+        MultipartFile standTemplate = contractRecorrectRequestBody.getStandTemplate();
+        if (standTemplate!=null&&!standTemplate.isEmpty()){
+            String standTemplateFileName = FileSaver.save(filePath,standTemplate);
+            String standTemplateMediaId = uploadToDingPan.doUpload(standTemplateFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),standTemplateMediaId,standTemplateFileName,accessToken,appInfo)){
+                log.info("文件:"+standTemplateFileName+",mediaId:"+standTemplateMediaId+",推送失败");
             }
-            String templateFileName = contractTemplateEntity.getFilePath();
-            String templateMediaId = uploadToDingPan.doUpload(templateFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),templateMediaId,templateFileName,accessToken,appInfo)){
-                log.info("文件:"+templateFileName+",mediaId:"+templateMediaId+",推送失败");
-            }
-            contractInfoEntity.setStandTemplateDingPanId(templateMediaId);
+            contractInfoEntity.setStandTemplateDingPanId(standTemplateMediaId);
+            contractInfoEntity.setStandTemplateFilePath(standTemplateFileName);
         }
 
 
@@ -204,18 +199,6 @@ public class RecorrectServiceImpl implements RecorrectService {
             contractInfoEntity.setTheirQualityDingPanId(qualityFileMediaId);
         }
 
-
-        //不使用标准模板的说明文件保存并上传钉盘，存入流程变量
-        if (!contractRecorrectRequestBody.getReasonOfNotUsingStandTemplate().isEmpty()){
-            MultipartFile reason = contractRecorrectRequestBody.getReasonOfNotUsingStandTemplate();
-            String reasonFileName = FileSaver.save(filePath,reason);
-            String reasonMediaId = uploadToDingPan.doUpload(reasonFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),reasonMediaId,reasonFileName,accessToken,appInfo)){
-                log.info("文件:"+reasonFileName+",mediaId:"+reasonMediaId+",推送失败");
-            }
-            contractInfoEntity.setReasonOfNotUsingStandTemplateFilePath(reasonFileName);
-            contractInfoEntity.setReasonOfNotUsingStandTemplateDingPanId(reasonMediaId);
-        }
 
         //合同正文保存并上传钉盘，存入流程变量
         if (!contractRecorrectRequestBody.getContractText().isEmpty()){

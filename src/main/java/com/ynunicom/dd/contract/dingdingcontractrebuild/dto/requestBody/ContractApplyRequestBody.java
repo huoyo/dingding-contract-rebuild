@@ -37,12 +37,10 @@ public class ContractApplyRequestBody implements Serializable {
     @NotNull
     private MultipartFile theirQuality;
 
-    private String standTemplateId;
+    private MultipartFile standTemplate;
 
     @NotBlank
     private String useageOfStandTemplate;
-
-    private MultipartFile reasonOfNotUsingStandTemplate;
 
     @NotNull
     private MultipartFile contractText;
@@ -94,4 +92,13 @@ public class ContractApplyRequestBody implements Serializable {
 
     @NotBlank
     private String finalReviewerList;
+
+    private String preContractId;
+
+    @NotBlank
+    private String method;
+
+    //四大类的哪一种,1代表战略框架合作，2支出类框架协议，3支出类固定金额合同，4收入类合同
+    @NotBlank
+    private Integer prop;
 }
