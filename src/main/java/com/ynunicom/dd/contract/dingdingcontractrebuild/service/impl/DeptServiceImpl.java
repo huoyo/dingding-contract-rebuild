@@ -3,13 +3,17 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiDepartmentGetRequest;
 import com.dingtalk.api.request.OapiDepartmentListRequest;
+import com.dingtalk.api.response.OapiDepartmentGetResponse;
 import com.dingtalk.api.response.OapiDepartmentListResponse;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.DeptService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,5 +39,22 @@ public class DeptServiceImpl implements DeptService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("deptList",response.getDepartment());
         return jsonObject;
+    }
+
+    @SneakyThrows
+    @Override
+    public Map<String,String> getByDeptId(String accessToken, String deptId) {
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/department/get");
+        OapiDepartmentGetRequest request = new OapiDepartmentGetRequest();
+        request.setId(deptId);
+        request.setHttpMethod("GET");
+        OapiDepartmentGetResponse response = client.execute(request, accessToken);
+        if (!response.isSuccess()){
+            throw new BussException(response.getErrmsg());
+        }
+        Map<String,String> map = new HashMap<>();
+        map.put("name",response.getName());
+        map.put("deptId",String.valueOf(response.getId()));
+        return map;
     }
 }

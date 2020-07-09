@@ -1,9 +1,6 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.dao;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
@@ -30,6 +27,11 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
             isKey = true, comment = "id")
     @TableId
     private String id;
+
+    @Column(name = "contractNo",type = MySqlTypeConstant.VARCHAR,isNull = false,
+            comment = "合同编码")
+    @TableField("contractNo")
+    private String contractNo;
 
     @Column(name = "contractName",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "合同名称")
@@ -247,7 +249,16 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField("prop")
     private Integer prop;
 
+    @Column(name = "createdtime", type = MySqlTypeConstant.DATETIME, isNull = false,comment = "创建时间")
+    @TableField(value = "createdtime",fill = FieldFill.INSERT)
+    protected Date createdtime;
+
+    @Column(name = "updatetime", type = MySqlTypeConstant.DATETIME, isNull = false,comment = "更新时间")
+    @TableField(value = "updatetime",fill = FieldFill.INSERT_UPDATE)
+    protected Date updatetime;
+
     public ContractInfoEntity(ContractApplyRequestBody contractApplyRequestBody){
+        this.contractNo = contractApplyRequestBody.getContractNo();
         this.contactPhone = contractApplyRequestBody.getContactPhone();
         this.contractName = contractApplyRequestBody.getContractName();
         this.contractRunnerName = contractApplyRequestBody.getContractRunnerNamer();

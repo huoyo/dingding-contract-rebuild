@@ -42,6 +42,7 @@ import java.util.Map;
  * @author: jinye.Bai
  * @date: 2020/7/1 9:38
  */
+@Deprecated
 @Service
 @Slf4j
 public class AlterServiceImpl implements AlterService {
@@ -144,7 +145,7 @@ public class AlterServiceImpl implements AlterService {
             if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
@@ -159,7 +160,7 @@ public class AlterServiceImpl implements AlterService {
             if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
@@ -174,7 +175,7 @@ public class AlterServiceImpl implements AlterService {
             if (!PushFileTo.pushToUser(contractAlterRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,id,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath3(attachmentFileName);

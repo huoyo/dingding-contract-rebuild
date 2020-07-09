@@ -14,6 +14,7 @@ import javax.annotation.Resource;
  * @author: jinye.Bai
  * @date: 2020/7/1 9:30
  */
+@Deprecated
 @RestController
 @RequestMapping("/alter")
 public class RunningContractAlterController {

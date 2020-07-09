@@ -23,6 +23,7 @@ import java.util.List;
  * @author: jinye.Bai
  * @date: 2020/6/23 11:04
  */
+@Deprecated
 @RestController
 @RequestMapping("/template")
 @Slf4j

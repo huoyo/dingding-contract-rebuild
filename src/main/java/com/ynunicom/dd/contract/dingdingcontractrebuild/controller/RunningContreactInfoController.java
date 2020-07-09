@@ -40,6 +40,13 @@ public class RunningContreactInfoController {
     @Resource
     AppInfo appInfo;
 
+
+    @GetMapping("/{contractId}")
+    public ResponseDto getByContractId(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId,@PathVariable("contractId")String contractId){
+        ContractInfoEntity contractInfoEntity = contractInfoMapper.selectById(contractId);
+        return ResponseDto.success(contractInfoEntity);
+    }
+
     /**
      * 获取自己履行的合同,合同在履行时为running
      * @param accessToken

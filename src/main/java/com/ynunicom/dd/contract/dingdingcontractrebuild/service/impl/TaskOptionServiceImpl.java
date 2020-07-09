@@ -14,6 +14,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMap
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.MethodStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
@@ -82,7 +83,6 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Override
     public Task taskVarLoadFromOutSide(Task task, ContractApplyRequestBody contractApplyRequestBody, String accessToken){
         Map<String,Object> map = taskService.getVariables(task.getId());
-        map.put("applyUserId",contractApplyRequestBody.getOrganizerUserId());
         ContractInfoEntity contractInfoEntityBefore = (ContractInfoEntity) map.get("contract");
         ContractInfoEntity contractInfoEntityComming = new ContractInfoEntity(contractApplyRequestBody);
         /**
@@ -217,6 +217,10 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Transactional
     @Override
     public Map<String, Object> startNewInst(ContractApplyRequestBody contractApplyRequestBody, String accessToken) {
+        if (!contractApplyRequestBody.getMethod().equals(MethodStatus.APPLY)&&!contractApplyRequestBody.getMethod().equals(MethodStatus.ALTER)
+        &&!contractApplyRequestBody.getMethod().equals(MethodStatus.CONTINUE)&&!contractApplyRequestBody.getMethod().equals(MethodStatus.PREEND)){
+            throw new BussException("method不合法");
+        }
         ContractInfoEntity preContractInfoEntity = null;
         if (contractApplyRequestBody.getPreContractId()!=null&&!contractApplyRequestBody.getPreContractId().isEmpty()){
             preContractInfoEntity = contractInfoMapper.selectById(contractApplyRequestBody.getPreContractId());
@@ -247,7 +251,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
@@ -262,7 +266,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
@@ -277,7 +281,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
@@ -300,35 +304,42 @@ public class TaskOptionServiceImpl implements TaskOptionService {
 
         //对方资质文件保存并上传钉盘，存入流程变量
         MultipartFile qualityFile = contractApplyRequestBody.getTheirQuality();
-        String qualityFileName = FileSaver.save(filePath,qualityFile);
-        String qualityFileMediaId = uploadToDingPan.doUpload(qualityFileName,accessToken);
-        if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),qualityFileMediaId,qualityFileName,accessToken,appInfo)){
-            log.info("文件:"+qualityFileName+",mediaId:"+qualityFileMediaId+",推送失败");
+        if (qualityFile!=null&&!qualityFile.isEmpty()){
+            String qualityFileName = FileSaver.save(filePath,qualityFile);
+            String qualityFileMediaId = uploadToDingPan.doUpload(qualityFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),qualityFileMediaId,qualityFileName,accessToken,appInfo)){
+                log.info("文件:"+qualityFileName+",mediaId:"+qualityFileMediaId+",推送失败");
+            }
+            contractInfoEntity.setTheirQualityFilePath(qualityFileName);
+            contractInfoEntity.setTheirQualityDingPanId(qualityFileMediaId);
         }
-        contractInfoEntity.setTheirQualityFilePath(qualityFileName);
-        contractInfoEntity.setTheirQualityDingPanId(qualityFileMediaId);
 
 
         //合同正文保存并上传钉盘，存入流程变量
         MultipartFile contractText = contractApplyRequestBody.getContractText();
-        String contractTextFileName = FileSaver.save(filePath,contractText);
-        if (contractTextFileName!=null){
-            String contractTextMediaId = uploadToDingPan.doUpload(contractTextFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),contractTextMediaId,contractTextFileName,accessToken,appInfo)){
-                log.info("文件:"+contractTextFileName+",mediaId:"+contractTextMediaId+",推送失败");
+        if (contractText!=null&&!contractText.isEmpty()){
+            String contractTextFileName = FileSaver.save(filePath,contractText);
+            if (contractTextFileName!=null){
+                String contractTextMediaId = uploadToDingPan.doUpload(contractTextFileName,accessToken);
+                if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),contractTextMediaId,contractTextFileName,accessToken,appInfo)){
+                    log.info("文件:"+contractTextFileName+",mediaId:"+contractTextMediaId+",推送失败");
+                }
+                contractInfoEntity.setContractTextFilePath(contractTextFileName);
+                contractInfoEntity.setContractTextDingPanId(contractTextMediaId);
             }
-            contractInfoEntity.setContractTextFilePath(contractTextFileName);
-            contractInfoEntity.setContractTextDingPanId(contractTextMediaId);
         }
+
 
         //合同变量存入数据库
         contractInfoMapper.insert(contractInfoEntity);
 
 
-
         //结束任务
         runtimeService.updateBusinessKey(task.getProcessInstanceId(),contractId);
-        if (preContractInfoEntity!=null){
+        if (!contractApplyRequestBody.getMethod().equals(MethodStatus.APPLY)){
+            if (preContractInfoEntity==null){
+                throw new BussException(contractApplyRequestBody.getPreContractId()+"合同未找到");
+            }
             contractInfoEntity.setPreContractId(preContractInfoEntity.getId());
         }
         contractInfoEntity.setStatu(ContractInfoStatus.APPLYING);

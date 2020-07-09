@@ -3,6 +3,7 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author: jinye.Bai
@@ -15,6 +16,8 @@ public class JudgePersonEntity implements Serializable {
     private Boolean isOk;
 
     private String comment;
+
+    private Date lastJudgeTime;
 
     private PersonEntity personEntity;
 }

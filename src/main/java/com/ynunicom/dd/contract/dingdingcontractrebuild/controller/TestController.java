@@ -33,6 +33,7 @@ import java.util.List;
  * @author: jinye.Bai
  * @date: 2020/6/19 16:43
  */
+@Deprecated
 @RestController
 @RequestMapping("/test")
 @Slf4j

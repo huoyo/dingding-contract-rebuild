@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +53,9 @@ public class JudgeServiceImpl implements JudgeService {
         }
         judgePersonEntity.setIsOk(judgeRequestBody.getIsOk());
         judgePersonEntity.setComment(judgeRequestBody.getComment());
+        judgePersonEntity.setLastJudgeTime(new Date());
         map.put("currentIsOk",judgeRequestBody.getIsOk());
-        MsgSender.send(accessToken,contractInfoEntity.getOrganizerUserId(),appInfo,"你的合同"+contractInfoEntity.getContractName()+"已被审核人"+judgerName+"驳回");
+        MsgSender.send(accessToken,contractInfoEntity.getOrganizerUserId(),appInfo,"你的合同"+contractInfoEntity.getContractName()+"已被审核人"+judgerName+"审批");
         taskService.complete(taskId,map);
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(map);

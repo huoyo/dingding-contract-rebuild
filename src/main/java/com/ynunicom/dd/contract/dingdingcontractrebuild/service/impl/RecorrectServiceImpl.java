@@ -127,16 +127,17 @@ public class RecorrectServiceImpl implements RecorrectService {
 
         ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
         String contractId = contractInfoEntity.getId();
+        String applyerUserId = (String) map.get("applyUserId");
 
         //附件1保存并上传钉盘,存入流程变量
         MultipartFile attachment = contractRecorrectRequestBody.getAttachment1();
         if (attachment!=null&&!attachment.isEmpty()){
             String attachmentFileName = FileSaver.save(filePath,attachment);
             String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+            if (!PushFileTo.pushToUser(applyerUserId,attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid1(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath1(attachmentFileName);
@@ -148,10 +149,10 @@ public class RecorrectServiceImpl implements RecorrectService {
         if (attachment!=null&&!attachment.isEmpty()){
             String attachmentFileName = FileSaver.save(filePath,attachment);
             String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+            if (!PushFileTo.pushToUser(applyerUserId,attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid2(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath2(attachmentFileName);
@@ -163,10 +164,10 @@ public class RecorrectServiceImpl implements RecorrectService {
         if (attachment!=null&&!attachment.isEmpty()){
             String attachmentFileName = FileSaver.save(filePath,attachment);
             String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+            if (!PushFileTo.pushToUser(applyerUserId,attachmentMediaId,attachmentFileName,accessToken,appInfo)){
                 log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
             }
-            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,null,attachmentFileName,attachmentMediaId);
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
             attachmentMapper.insert(attachmentEntity);
             contractInfoEntity.setAttachmentDingPanid3(attachmentMediaId);
             contractInfoEntity.setAttachmentFilePath3(attachmentFileName);
@@ -179,7 +180,7 @@ public class RecorrectServiceImpl implements RecorrectService {
         if (standTemplate!=null&&!standTemplate.isEmpty()){
             String standTemplateFileName = FileSaver.save(filePath,standTemplate);
             String standTemplateMediaId = uploadToDingPan.doUpload(standTemplateFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),standTemplateMediaId,standTemplateFileName,accessToken,appInfo)){
+            if (!PushFileTo.pushToUser(applyerUserId,standTemplateMediaId,standTemplateFileName,accessToken,appInfo)){
                 log.info("文件:"+standTemplateFileName+",mediaId:"+standTemplateMediaId+",推送失败");
             }
             contractInfoEntity.setStandTemplateDingPanId(standTemplateMediaId);
@@ -192,7 +193,7 @@ public class RecorrectServiceImpl implements RecorrectService {
             MultipartFile qualityFile = contractRecorrectRequestBody.getTheirQuality();
             String qualityFileName = FileSaver.save(filePath,qualityFile);
             String qualityFileMediaId = uploadToDingPan.doUpload(qualityFileName,accessToken);
-            if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),qualityFileMediaId,qualityFileName,accessToken,appInfo)){
+            if (!PushFileTo.pushToUser(applyerUserId,qualityFileMediaId,qualityFileName,accessToken,appInfo)){
                 log.info("文件:"+qualityFileName+",mediaId:"+qualityFileMediaId+",推送失败");
             }
             contractInfoEntity.setTheirQualityFilePath(qualityFileName);
@@ -206,7 +207,7 @@ public class RecorrectServiceImpl implements RecorrectService {
             String contractTextFileName = FileSaver.save(filePath,contractText);
             if (contractTextFileName!=null){
                 String contractTextMediaId = uploadToDingPan.doUpload(contractTextFileName,accessToken);
-                if (!PushFileTo.pushToUser(contractRecorrectRequestBody.getOrganizerUserId(),contractTextMediaId,contractTextFileName,accessToken,appInfo)){
+                if (!PushFileTo.pushToUser(applyerUserId,contractTextMediaId,contractTextFileName,accessToken,appInfo)){
                     log.info("文件:"+contractTextFileName+",mediaId:"+contractTextMediaId+",推送失败");
                 }
                 contractInfoEntity.setContractTextFilePath(contractTextFileName);
