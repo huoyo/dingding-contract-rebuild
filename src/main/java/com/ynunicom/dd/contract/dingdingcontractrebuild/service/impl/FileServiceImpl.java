@@ -13,6 +13,8 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UserVerify;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -70,6 +72,38 @@ public class FileServiceImpl implements FileService {
     private boolean checkHavePdf(String fileName){
         File file = new File("/pdf/"+fileName);
         return file.exists();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @SneakyThrows
+    @Override
+    public boolean del(String accessToken, String fileName, String userId, String contractId) {
+        ContractInfoEntity contractInfoEntity = contractInfoMapper.selectById(contractId);
+        if (contractInfoEntity==null){
+            throw new BussException(contractId+"此合同不存在");
+        }
+        if (contractInfoEntity.getAttachmentFilePath1().equals(fileName)){
+            contractInfoEntity.setAttachmentFilePath1("");
+            contractInfoEntity.setAttachmentDingPanid1("");
+        }
+        if (contractInfoEntity.getAttachmentFilePath2().equals(fileName)){
+            contractInfoEntity.setAttachmentFilePath2("");
+            contractInfoEntity.setAttachmentDingPanid2("");
+        }
+        if (contractInfoEntity.getAttachmentFilePath3().equals(fileName)){
+            contractInfoEntity.setAttachmentFilePath3("");
+            contractInfoEntity.setAttachmentDingPanid3("");
+        }
+        if (contractInfoEntity.getAttachmentFilePath4().equals(fileName)){
+            contractInfoEntity.setAttachmentFilePath4("");
+            contractInfoEntity.setAttachmentDingPanid4("");
+        }
+        if (contractInfoEntity.getAttachmentFilePath5().equals(fileName)){
+            contractInfoEntity.setAttachmentFilePath5("");
+            contractInfoEntity.setAttachmentDingPanid5("");
+        }
+        contractInfoMapper.updateById(contractInfoEntity);
+        return true;
     }
 
     @SneakyThrows
