@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.MethodStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractSaverRefulseRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.TaskIdRequestBody;
@@ -84,17 +86,41 @@ public class ContractSaverController {
         contractInfoEntity.setSignName(userName);
         contractInfoMapper.updateById(contractInfoEntity);
         if (contractInfoEntity.getSave()==1){
-            if ("altering".equals(contractInfoEntity.getStatu())){
-                contractInfoEntity.setStatu("running");
+            if (ContractInfoStatus.ALTERING.equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
+                ContractInfoEntity preContractInfoEntiry = contractInfoMapper.selectById(contractInfoEntity.getPreContractId());
+                preContractInfoEntiry.setStatu(ContractInfoStatus.ENDED);
+                map.put("contract",contractInfoEntity);
+                map.put("currentIsOk",true);
+                contractInfoMapper.updateById(contractInfoEntity);
+                contractInfoMapper.updateById(preContractInfoEntiry);
+                taskService.complete(taskIdRequestBody.getTaskId(),map);
+                return ResponseDto.success("签章完成");
             }
-            else if ("continueing".equals(contractInfoEntity.getStatu())){
-                contractInfoEntity.setStatu("running");
+            else if (ContractInfoStatus.CONTINUEING.equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
+                ContractInfoEntity preContractInfoEntiry = contractInfoMapper.selectById(contractInfoEntity.getPreContractId());
+                preContractInfoEntiry.setStatu(ContractInfoStatus.ENDED);
+                map.put("contract",contractInfoEntity);
+                map.put("currentIsOk",true);
+                contractInfoMapper.updateById(contractInfoEntity);
+                contractInfoMapper.updateById(preContractInfoEntiry);
+                taskService.complete(taskIdRequestBody.getTaskId(),map);
+                return ResponseDto.success("签章完成");
             }
-            else if ("preEnding".equals(contractInfoEntity.getStatu())){
-                contractInfoEntity.setStatu("preEnded");
+            else if (ContractInfoStatus.PRE_ENDING.equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu(ContractInfoStatus.ENDED);
+                ContractInfoEntity preContractInfoEntiry = contractInfoMapper.selectById(contractInfoEntity.getPreContractId());
+                preContractInfoEntiry.setStatu(ContractInfoStatus.PRE_ENDED);
+                contractInfoMapper.updateById(preContractInfoEntiry);
+                map.put("contract",contractInfoEntity);
+                map.put("currentIsOk",true);
+                contractInfoMapper.deleteById(contractInfoEntity.getId());
+                taskService.complete(taskIdRequestBody.getTaskId(),map);
+                return ResponseDto.success("存档完成");
             }
             else{
-                contractInfoEntity.setStatu("running");
+                contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
             }
             map.put("contract",contractInfoEntity);
             map.put("currentIsOk",true);
@@ -125,17 +151,41 @@ public class ContractSaverController {
         contractInfoEntity.setSaveName(userName);
         contractInfoMapper.updateById(contractInfoEntity);
         if (contractInfoEntity.getSign()==1){
-            if ("altering".equals(contractInfoEntity.getStatu())){
-                contractInfoEntity.setStatu("running");
+            if (ContractInfoStatus.ALTERING.equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
+                ContractInfoEntity preContractInfoEntiry = contractInfoMapper.selectById(contractInfoEntity.getPreContractId());
+                preContractInfoEntiry.setStatu(ContractInfoStatus.ENDED);
+                map.put("contract",contractInfoEntity);
+                map.put("currentIsOk",true);
+                contractInfoMapper.updateById(contractInfoEntity);
+                contractInfoMapper.updateById(preContractInfoEntiry);
+                taskService.complete(taskIdRequestBody.getTaskId(),map);
+                return ResponseDto.success("签章完成");
             }
-            else if ("continueing".equals(contractInfoEntity.getStatu())){
-                contractInfoEntity.setStatu("running");
+            else if (ContractInfoStatus.CONTINUEING.equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
+                ContractInfoEntity preContractInfoEntiry = contractInfoMapper.selectById(contractInfoEntity.getPreContractId());
+                preContractInfoEntiry.setStatu(ContractInfoStatus.ENDED);
+                map.put("contract",contractInfoEntity);
+                map.put("currentIsOk",true);
+                contractInfoMapper.updateById(contractInfoEntity);
+                contractInfoMapper.updateById(preContractInfoEntiry);
+                taskService.complete(taskIdRequestBody.getTaskId(),map);
+                return ResponseDto.success("签章完成");
             }
-            else if ("preEnding".equals(contractInfoEntity.getStatu())){
-                contractInfoEntity.setStatu("preEnded");
+            else if (ContractInfoStatus.PRE_ENDING.equals(contractInfoEntity.getStatu())){
+                contractInfoEntity.setStatu(ContractInfoStatus.ENDED);
+                ContractInfoEntity preContractInfoEntiry = contractInfoMapper.selectById(contractInfoEntity.getPreContractId());
+                preContractInfoEntiry.setStatu(ContractInfoStatus.PRE_ENDED);
+                contractInfoMapper.updateById(preContractInfoEntiry);
+                map.put("contract",contractInfoEntity);
+                map.put("currentIsOk",true);
+                contractInfoMapper.deleteById(contractInfoEntity.getId());
+                taskService.complete(taskIdRequestBody.getTaskId(),map);
+                return ResponseDto.success("存档完成");
             }
             else{
-                contractInfoEntity.setStatu("running");
+                contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
             }
             map.put("contract",contractInfoEntity);
             map.put("currentIsOk",true);
@@ -159,7 +209,7 @@ public class ContractSaverController {
         Map<String,Object> map = taskService.getVariables(contractSaverRefulseRequestBody.getTaskId());
         map.put("contractSaverComment",contractSaverRefulseRequestBody.getComment());
         map.put("currentIsOk",false);
-        if (!MsgSender.send(accessToken,userId,appInfo,"您的合同审批被驳回，请进入应用查看")) {
+        if (!MsgSender.send(accessToken, (String) map.get("applyUserId"),appInfo,"您的合同审批被驳回，请进入应用查看")) {
             throw new BussException("消息发送失败");
         }
         taskService.complete(contractSaverRefulseRequestBody.getTaskId(),map);

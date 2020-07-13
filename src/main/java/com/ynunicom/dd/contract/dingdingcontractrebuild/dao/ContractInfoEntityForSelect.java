@@ -110,11 +110,8 @@ public class ContractInfoEntityForSelect extends BaseModel implements EntityFath
         @TableField("moneyWithTax")
         private String moneyWithTax;
 
-        @TableField("stratTime")
-        private Date stratTime;
-
-        @TableField("endTime")
-        private Date endTime;
+        @TableField("deadlineForPerformance")
+        private String deadlineForPerformance;
 
         @TableField("organizers")
         private String organizers;
@@ -170,8 +167,7 @@ public class ContractInfoEntityForSelect extends BaseModel implements EntityFath
                 this.organizerName = contractAlterRequestBody.getOrganizerName();
                 this.organizers = contractAlterRequestBody.getOrganizers();
                 this.organizerUserId = contractAlterRequestBody.getOrganizerUserId();
-                this.stratTime = new Date(contractAlterRequestBody.getStartTime());
-                this.endTime = new Date(contractAlterRequestBody.getEndTime());
+                this.deadlineForPerformance = contractAlterRequestBody.getDeadlineForPerformance();
                 this.reviewerList = contractAlterRequestBody.getReviewerList();
                 this.finalReviewerList = contractAlterRequestBody.getFinalReviewerList();
                 this.theWayTheyChoice = contractAlterRequestBody.getTheWayTheyChoice();
@@ -196,8 +192,7 @@ public class ContractInfoEntityForSelect extends BaseModel implements EntityFath
                 contractInfoEntity.setOrganizers(this.organizers);
                 contractInfoEntity.setOrganizerUserId(this.organizerUserId);
                 contractInfoEntity.setStandTemplateFileId(this.standTemplateFileId);
-                contractInfoEntity.setStratTime(this.stratTime);
-                contractInfoEntity.setEndTime(this.endTime);
+                contractInfoEntity.setDeadlineForPerformance(this.deadlineForPerformance);
                 contractInfoEntity.setReviewerList(this.reviewerList);
                 contractInfoEntity.setFinalReviewerList(this.finalReviewerList);
                 contractInfoEntity.setTheWayTheyChoice(this.theWayTheyChoice);

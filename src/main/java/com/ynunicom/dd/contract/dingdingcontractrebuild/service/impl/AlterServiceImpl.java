@@ -19,6 +19,7 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.Contract
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.AlterService;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.DeptService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.*;
 import lombok.SneakyThrows;
@@ -78,6 +79,9 @@ public class AlterServiceImpl implements AlterService {
     ContractInfoSelectMapper contractInfoSelectMapper;
 
     @Resource
+    DeptService deptService;
+
+    @Resource
     ProcessInstanceDefKey alterProcessInstanceDefKey;
 
     private Task taskVarLoad(Task task, ContractAlterRequestBody contractAlterRequestBody,ContractInfoEntity beforeContractInfoEntity, String accessToken){
@@ -88,7 +92,8 @@ public class AlterServiceImpl implements AlterService {
                 userIdList){
             JSONObject jsonObject = userInfoService.getUserInfo(accessToken,userId);
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
-            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"),jsonObject.getJSONArray("department").toJSONString());
+            String deptId = jsonObject.getJSONArray("department").getString(0);
+            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"),deptId,deptService.getByDeptId(accessToken,deptId).get("name"));
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntity.setIsOk(false);
             judgePersonEntityList.add(judgePersonEntity);
@@ -97,7 +102,7 @@ public class AlterServiceImpl implements AlterService {
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
             judgePersonEntity.setIsOk(true);
             judgePersonEntity.setComment("null");
-            PersonEntity personEntity = new PersonEntity("null","null","null","null");
+            PersonEntity personEntity = new PersonEntity("null","null","null","null","null");
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }

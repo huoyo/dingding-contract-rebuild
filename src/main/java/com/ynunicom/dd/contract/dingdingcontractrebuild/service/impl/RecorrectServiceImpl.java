@@ -1,6 +1,8 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.jcraft.jsch.UserInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
@@ -9,9 +11,12 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMap
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractRecorrectRequestBody;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.LegalRecorrectRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RecorrectService;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RoleService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.OtherDeletor;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
@@ -29,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,6 +63,9 @@ public class RecorrectServiceImpl implements RecorrectService {
 
     @Resource
     AppInfo appInfo;
+
+    @Resource
+    UserInfoService userInfoService;
 
     @Resource
     ContractTemplateMapper contractTemplateMapper;
@@ -174,6 +183,36 @@ public class RecorrectServiceImpl implements RecorrectService {
             String attachmentId = attachmentEntity.getId();
         }
 
+        //附件4保存并上传钉盘,存入流程变量
+        attachment = contractRecorrectRequestBody.getAttachment4();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(applyerUserId,attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid4(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath4(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
+        //附件5保存并上传钉盘,存入流程变量
+        attachment = contractRecorrectRequestBody.getAttachment5();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(applyerUserId,attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid5(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath5(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
 
         //合同模板上传钉盘，存入流程变量
         MultipartFile standTemplate = contractRecorrectRequestBody.getStandTemplate();
@@ -219,8 +258,49 @@ public class RecorrectServiceImpl implements RecorrectService {
         contractInfoMapper.updateById(contractInfoEntity);
 
         //结束任务
+        contractInfoEntity.setStatu(((String) map.get("method"))+"ing");
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);
+        return map;
+    }
+
+    @SneakyThrows
+    @Override
+    public Map<String, Object> legalRecorrect(String accessToken, String userId, LegalRecorrectRequestBody legalRecorrectRequestBody) {
+        if (legalRecorrectRequestBody.getContractText()==null||legalRecorrectRequestBody.getContractText().isEmpty()){
+            throw new BussException("合同正文不可为空");
+        }
+        JSONObject jsonObject = userInfoService.getUserInfo(accessToken,userId);
+        if (jsonObject==null||jsonObject.isEmpty()){
+            throw new BussException("获取用户信息失败");
+        }
+        List<String> deptList = jsonObject.getJSONArray("department").toJavaList(String.class);
+        if (deptList==null||deptList.isEmpty()){
+            throw new BussException("获取用户信息失败");
+        }
+        boolean flag = false;
+        for (String deptId :
+                deptList) {
+            if (deptId.equals(appInfo.getLegalDeptId())){
+                flag = true;
+            }
+        }
+        if (!flag){
+            throw new BussException("用户并非法律顾问人员");
+        }
+
+        Task task = taskService.createTaskQuery().taskId(legalRecorrectRequestBody.getTaskId()).singleResult();
+        if (task==null){
+            throw new BussException(legalRecorrectRequestBody.getTaskId()+"任务不存在");
+        }
+        Map<String,Object> map = taskService.getVariables(task.getId());
+        ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
+        String fileName = FileSaver.save(filePath,legalRecorrectRequestBody.getContractText());
+        String mediaId = uploadToDingPan.doUpload(fileName,accessToken);
+        contractInfoEntity.setContractTextDingPanId(mediaId);
+        contractInfoEntity.setContractTextFilePath(fileName);
+        map.put("contract",contractInfoEntity);
+        taskService.setVariables(task.getId(),map);
         return map;
     }
 }

@@ -7,6 +7,8 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status;
 public interface   ContractInfoStatus {
     String ENDED = "ended";
 
+    String REJECT = "reject";
+
     String APPLYING = "applying";
 
     String RUNNING = "running";

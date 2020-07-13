@@ -55,7 +55,7 @@ public class RunningContreactInfoController {
      */
     @GetMapping
     public ResponseDto get(@RequestParam("accessToken")String accessToken,@RequestParam("userId") String userId){
-        List<ContractInfoEntityForSelect> contractInfoEntityList = contractInfoSelectMapper.selectList(new LambdaQueryWrapper<ContractInfoEntityForSelect>().eq(ContractInfoEntityForSelect::getStatu,"running").eq(ContractInfoEntityForSelect::getContractRunnerUserId,userId));
+        List<ContractInfoEntity> contractInfoEntityList = contractInfoMapper.selectList(new LambdaQueryWrapper<ContractInfoEntity>().eq(ContractInfoEntity::getStatu,"running").eq(ContractInfoEntity::getContractRunnerUserId,userId));
         return ResponseDto.success(contractInfoEntityList);
     }
 

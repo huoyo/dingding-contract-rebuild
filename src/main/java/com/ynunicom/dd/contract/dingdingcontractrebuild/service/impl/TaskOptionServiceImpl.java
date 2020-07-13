@@ -1,11 +1,13 @@
 package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
+import com.mysql.cj.xdevapi.JsonArray;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
@@ -15,12 +17,14 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoM
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.MethodStatus;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.AttachmentResponse;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.HurryUpRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.DeptService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.RoleService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.TaskOptionService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
@@ -78,6 +82,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     RoleService roleService;
 
     @Resource
+    DeptService deptService;
+
+    @Resource
     ProcessInstanceDefKey startProcessInstanceDefKey;
 
     @Override
@@ -95,6 +102,47 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         return task;
     }
 
+    @SneakyThrows
+    @Override
+    public JSONObject getOneByApplyUserIdAndContractId(String accessToken, String userId, String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (task==null){
+            throw new BussException(taskId+"任务不存在");
+        }
+        Map<String,Object> map = taskService.getVariables(task.getId());
+        ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
+        AttachmentResponse attachmentResponse = new AttachmentResponse();
+        Map<String ,String > attachmentMap = new HashMap<>();
+        if(contractInfoEntity.getAttachmentFilePath1()!=null){
+            attachmentMap.put(contractInfoEntity.getAttachmentFilePath1(),contractInfoEntity.getAttachmentDingPanid1());
+        }
+        if(contractInfoEntity.getAttachmentFilePath2()!=null){
+            attachmentMap.put(contractInfoEntity.getAttachmentFilePath2(),contractInfoEntity.getAttachmentDingPanid2());
+        }
+        if(contractInfoEntity.getAttachmentFilePath3()!=null){
+            attachmentMap.put(contractInfoEntity.getAttachmentFilePath3(),contractInfoEntity.getAttachmentDingPanid3());
+        }
+        if(contractInfoEntity.getAttachmentFilePath4()!=null){
+            attachmentMap.put(contractInfoEntity.getAttachmentFilePath4(),contractInfoEntity.getAttachmentDingPanid4());
+        }
+        if(contractInfoEntity.getAttachmentFilePath5()!=null){
+            attachmentMap.put(contractInfoEntity.getAttachmentFilePath5(),contractInfoEntity.getAttachmentDingPanid5());
+        }
+        attachmentResponse.setMap(attachmentMap);
+        map.put("attachments",attachmentResponse);
+
+        JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(map.get("stages")));
+        for ( Object inner :
+                jsonArray) {
+                JSONObject innerJson = (JSONObject) inner;
+                if (innerJson.getString("lastJudgeTime")==null){
+                    innerJson.put("isOk",null);
+                }
+        }
+        map.put("stages",jsonArray);
+        return new JSONObject(map);
+    }
+
     private Task taskVarLoad(Task task,ContractApplyRequestBody contractApplyRequestBody,String accessToken){
         Map<String,Object> map = new HashMap<>();
         List<String> userIdList = StringsToList.trans(contractApplyRequestBody.getReviewerList());
@@ -103,7 +151,8 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         userIdList){
             JSONObject jsonObject = userInfoService.getUserInfo(accessToken,userId);
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
-            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"),jsonObject.getJSONArray("department").toJSONString());
+            String deptId = jsonObject.getJSONArray("department").getString(0);
+            PersonEntity personEntity = new PersonEntity(jsonObject.getString("name"),userId,jsonObject.getString("avatar"),deptId,deptService.getByDeptId(accessToken,deptId).get("name"));
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntity.setIsOk(false);
             judgePersonEntityList.add(judgePersonEntity);
@@ -112,7 +161,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
             judgePersonEntity.setIsOk(true);
             judgePersonEntity.setComment("null");
-            PersonEntity personEntity = new PersonEntity("null","null","null","null");
+            PersonEntity personEntity = new PersonEntity("null","null","null","null","null");
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }
@@ -124,7 +173,8 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             JSONObject finalReviewerJson = userInfoService.getUserInfo(accessToken,finalReviewer);
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
             judgePersonEntity.setIsOk(false);
-            PersonEntity personEntity = new PersonEntity(finalReviewerJson.getString("name"),finalReviewer,finalReviewerJson.getString("avatar"),finalReviewerJson.getJSONArray("department").toJSONString());
+            String deptId = finalReviewerJson.getJSONArray("department").getString(0);
+            PersonEntity personEntity = new PersonEntity(finalReviewerJson.getString("name"),finalReviewer,finalReviewerJson.getString("avatar"),deptId,deptService.getByDeptId(accessToken,deptId).get("name"));
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }
@@ -132,7 +182,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             JudgePersonEntity judgePersonEntity = new JudgePersonEntity();
             judgePersonEntity.setIsOk(true);
             judgePersonEntity.setComment("null");
-            PersonEntity personEntity = new PersonEntity("null","null","null","null");
+            PersonEntity personEntity = new PersonEntity("null","null","null","null","null");
             judgePersonEntity.setPersonEntity(personEntity);
             judgePersonEntityList.add(judgePersonEntity);
         }
@@ -161,7 +211,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             map.put("taskStage",task.getName());
             mapList.add(map);
         }
+        AttachmentResponse attachmentResponse = new AttachmentResponse();
         jsonArray.addAll(mapList);
+        jsonArray.add(getByRole(accessToken,userId));
         return jsonArray;
     }
 
@@ -217,6 +269,8 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Transactional
     @Override
     public Map<String, Object> startNewInst(ContractApplyRequestBody contractApplyRequestBody, String accessToken) {
+
+
         if (!contractApplyRequestBody.getMethod().equals(MethodStatus.APPLY)&&!contractApplyRequestBody.getMethod().equals(MethodStatus.ALTER)
         &&!contractApplyRequestBody.getMethod().equals(MethodStatus.CONTINUE)&&!contractApplyRequestBody.getMethod().equals(MethodStatus.PREEND)){
             throw new BussException("method不合法");
@@ -288,6 +342,36 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             String attachmentId = attachmentEntity.getId();
         }
 
+        //附件4保存并上传钉盘,存入流程变量
+        attachment = contractApplyRequestBody.getAttachment4();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid4(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath4(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
+        //附件5保存并上传钉盘,存入流程变量
+        attachment = contractApplyRequestBody.getAttachment5();
+        if (attachment!=null&&!attachment.isEmpty()){
+            String attachmentFileName = FileSaver.save(filePath,attachment);
+            String attachmentMediaId = uploadToDingPan.doUpload(attachmentFileName,accessToken);
+            if (!PushFileTo.pushToUser(contractApplyRequestBody.getOrganizerUserId(),attachmentMediaId,attachmentFileName,accessToken,appInfo)){
+                log.info("文件:"+attachmentFileName+",mediaId:"+attachmentMediaId+",推送失败");
+            }
+            AttachmentEntity attachmentEntity = new AttachmentEntity(attachmentFileName,contractId,attachmentFileName,attachmentMediaId);
+            attachmentMapper.insert(attachmentEntity);
+            contractInfoEntity.setAttachmentDingPanid5(attachmentMediaId);
+            contractInfoEntity.setAttachmentFilePath5(attachmentFileName);
+            String attachmentId = attachmentEntity.getId();
+        }
+
 
         //合同模板上传钉盘，存入流程变量
         MultipartFile standTemplate = contractApplyRequestBody.getStandTemplate();
@@ -340,9 +424,15 @@ public class TaskOptionServiceImpl implements TaskOptionService {
             if (preContractInfoEntity==null){
                 throw new BussException(contractApplyRequestBody.getPreContractId()+"合同未找到");
             }
+            if (!preContractInfoEntity.getContractRunnerUserId().equals(contractApplyRequestBody.getOrganizerUserId())){
+                throw new BussException("只有合同履行人才能发起修改、续签、提前终止");
+            }
             contractInfoEntity.setPreContractId(preContractInfoEntity.getId());
+            contractInfoEntity.setStatu(contractApplyRequestBody.getMethod()+"ing");
         }
-        contractInfoEntity.setStatu(ContractInfoStatus.APPLYING);
+        else{
+            contractInfoEntity.setStatu(ContractInfoStatus.APPLYING);
+        }
         map.put("method",contractApplyRequestBody.getMethod());
         map.put("contract",contractInfoEntity);
         taskService.complete(task.getId(),map);

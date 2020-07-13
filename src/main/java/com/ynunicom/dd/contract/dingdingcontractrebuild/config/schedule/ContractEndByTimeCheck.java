@@ -24,6 +24,7 @@ import java.util.List;
  * @author: jinye.Bai
  * @date: 2020/7/6 14:50
  */
+/**
 @Component
 @EnableScheduling
 @Slf4j
@@ -60,3 +61,4 @@ public class ContractEndByTimeCheck {
         }
     }
 }
+ **/

@@ -3,6 +3,7 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.JudgeRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
@@ -56,6 +57,10 @@ public class JudgeServiceImpl implements JudgeService {
         judgePersonEntity.setLastJudgeTime(new Date());
         map.put("currentIsOk",judgeRequestBody.getIsOk());
         MsgSender.send(accessToken,contractInfoEntity.getOrganizerUserId(),appInfo,"你的合同"+contractInfoEntity.getContractName()+"已被审核人"+judgerName+"审批");
+        if (!judgeRequestBody.getIsOk()){
+            contractInfoEntity.setStatu(ContractInfoStatus.REJECT);
+            map.put("contract",contractInfoEntity);
+        }
         taskService.complete(taskId,map);
         JSONArray jsonArray = new JSONArray();
         jsonArray.add(map);

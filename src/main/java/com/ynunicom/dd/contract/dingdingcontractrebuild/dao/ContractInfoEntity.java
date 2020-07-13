@@ -138,6 +138,26 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField("attachmentFilePath3")
     private String attachmentFilePath3;
 
+    @Column(name = "attachmentDingPanid4",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件4存储钉盘id")
+    @TableField("attachmentDingPanid4")
+    private String attachmentDingPanid4;
+
+    @Column(name = "attachmentFilePath4",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件4存储路径")
+    @TableField("attachmentFilePath4")
+    private String attachmentFilePath4;
+
+    @Column(name = "attachmentDingPanid5",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件5存储钉盘id")
+    @TableField("attachmentDingPanid5")
+    private String attachmentDingPanid5;
+
+    @Column(name = "attachmentFilePath5",type = MySqlTypeConstant.VARCHAR,
+            comment = "附件5存储路径")
+    @TableField("attachmentFilePath5")
+    private String attachmentFilePath5;
+
     @Column(name = "theWayTheyChoice",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "对方选择方式")
     @TableField("theWayTheyChoice")
@@ -168,15 +188,11 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField("moneyWithTax")
     private String moneyWithTax;
 
-    @Column(name = "stratTime",type = MySqlTypeConstant.DATETIME,isNull = false,
-            comment = "合同开始时间")
-    @TableField("stratTime")
-    private Date stratTime;
-
-    @Column(name = "endTime",type = MySqlTypeConstant.DATETIME,isNull = false,
-            comment = "合同履行期限")
-    @TableField("endTime")
-    private Date endTime;
+    @Column(name = "deadlineForPerformance",type = MySqlTypeConstant.VARCHAR,isNull = false,
+            comment = "合同履行期限,有以下几种情况：" +
+                    "一年以内，一至三年，三年以上，完成一定工作为期限，其他，自动延期")
+    @TableField("deadlineForPerformance")
+    private String deadlineForPerformance;
 
     @Column(name = "organizers",type = MySqlTypeConstant.VARCHAR,isNull = false,
             comment = "承办部门")
@@ -257,6 +273,10 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField(value = "updatetime",fill = FieldFill.INSERT_UPDATE)
     protected Date updatetime;
 
+    @Column(name = "preEndComment", type = MySqlTypeConstant.VARCHAR,comment = "终止理由")
+    @TableField(value = "preEndComment")
+    protected String preEndComment;
+
     public ContractInfoEntity(ContractApplyRequestBody contractApplyRequestBody){
         this.contractNo = contractApplyRequestBody.getContractNo();
         this.contactPhone = contractApplyRequestBody.getContactPhone();
@@ -273,8 +293,7 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
         this.organizerName = contractApplyRequestBody.getOrganizerName();
         this.organizers = contractApplyRequestBody.getOrganizers();
         this.organizerUserId = contractApplyRequestBody.getOrganizerUserId();
-        this.stratTime = new Date(contractApplyRequestBody.getStartTime());
-        this.endTime = new Date(contractApplyRequestBody.getEndTime());
+        this.deadlineForPerformance = contractApplyRequestBody.getDeadlineForPerformance();
         this.reviewerList = contractApplyRequestBody.getReviewerList();
         this.finalReviewerList = contractApplyRequestBody.getFinalReviewerList();
         this.theWayTheyChoice = contractApplyRequestBody.getTheWayTheyChoice();
@@ -283,5 +302,6 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
         this.preContractId = contractApplyRequestBody.getPreContractId();
         this.method = contractApplyRequestBody.getMethod();
         this.prop = contractApplyRequestBody.getProp();
+        this.preEndComment = contractApplyRequestBody.getPreEndComment();
     }
 }

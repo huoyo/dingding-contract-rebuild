@@ -16,6 +16,8 @@ public interface TaskOptionService {
 
     public Task taskVarLoadFromOutSide(Task task, ContractApplyRequestBody contractApplyRequestBody, String accessToken);
 
+    public JSONObject getOneByApplyUserIdAndContractId(String accessToken,String userId,String taskId);
+
     public JSONArray getByAssigneeUserId(String accessToken , String userId);
 
     public JSONArray getByApplyUserId(String accessToken , String applyUserId);

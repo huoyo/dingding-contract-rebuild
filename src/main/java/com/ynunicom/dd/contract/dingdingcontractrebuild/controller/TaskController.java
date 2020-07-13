@@ -30,6 +30,12 @@ public class TaskController {
         return ResponseDto.success(taskOptionService.getByApplyUserId(accessToken,userId));
     }
 
+    @GetMapping("/getOne")
+    public ResponseDto getOneByUserIdAndTaskId(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId,@RequestParam("taskId")String taskId){
+        return ResponseDto.success(taskOptionService.getOneByApplyUserIdAndContractId(accessToken,userId,taskId));
+    }
+
+
     @GetMapping("/getByRole")
     public ResponseDto getByRole(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId){
         return ResponseDto.success(taskOptionService.getByRole(accessToken,userId));
@@ -41,7 +47,7 @@ public class TaskController {
      * @return
      */
     @PostMapping("/startNewInst")
-    public ResponseDto startNewInst(@Validated ContractApplyRequestBody contractApplyRequestBody,@RequestParam("accessToken")String accessToken){
+    public ResponseDto startNewInst(ContractApplyRequestBody contractApplyRequestBody,@RequestParam("accessToken")String accessToken){
         return ResponseDto.success(taskOptionService.startNewInst(contractApplyRequestBody,accessToken));
     }
 

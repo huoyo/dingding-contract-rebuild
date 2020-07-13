@@ -16,13 +16,10 @@ import java.math.BigDecimal;
 @Data
 public class ContractApplyRequestBody implements Serializable {
 
-    @NotBlank
     private String contractName;
 
-    @NotBlank
     private String contractNo;
 
-    @NotBlank
     private String contractType;
 
     private String ourSideEntity;
@@ -47,6 +44,10 @@ public class ContractApplyRequestBody implements Serializable {
 
     private MultipartFile attachment3;
 
+    private MultipartFile attachment4;
+
+    private MultipartFile attachment5;
+
     private String theWayTheyChoice;
 
     private String theWayToPay;
@@ -59,9 +60,7 @@ public class ContractApplyRequestBody implements Serializable {
 
     private BigDecimal moneyWithTax;
 
-    private Long startTime;
-
-    private Long endTime;
+    private String deadlineForPerformance;
 
     private String organizers;
 
@@ -79,6 +78,7 @@ public class ContractApplyRequestBody implements Serializable {
 
     private String method;
 
+    private String preEndComment;
     //四大类的哪一种,1代表战略框架合作，2支出类框架协议，3支出类固定金额合同，4收入类合同
     @NotNull
     private Integer prop;

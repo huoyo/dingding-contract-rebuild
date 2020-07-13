@@ -10,10 +10,12 @@ import com.dingtalk.api.response.OapiUserGetResponse;
 import com.dingtalk.api.response.OapiUserSimplelistResponse;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.service.DeptService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.UserInfoService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +25,10 @@ import java.util.Objects;
  */
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
+
+    @Resource
+    DeptService deptService;
+
     @SneakyThrows
     @Override
     public JSONObject getList(String accessToken, Long deptId, Long offset, Long size, String order) {
@@ -66,7 +72,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         for (String userId :
                 userIdList) {
             JSONObject innerJson = getUserInfo(accessToken, userId);
-            PersonEntity personEntity = new PersonEntity(innerJson.getString("name"),innerJson.getString("userid"),innerJson.getString("avatar"),innerJson.getJSONArray("department").toJSONString());
+            String deptId = innerJson.getJSONArray("department").getString(0);
+            PersonEntity personEntity = new PersonEntity(innerJson.getString("name"),userId,innerJson.getString("avatar"),deptId,deptService.getByDeptId(accessToken,deptId).get("name"));
             jsonArray.add(personEntity);
         }
         return jsonArray;

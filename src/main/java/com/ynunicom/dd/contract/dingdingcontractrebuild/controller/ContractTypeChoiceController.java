@@ -10,9 +10,12 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractTypes
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.DeptEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.TypeDeciderRequestBody;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UpperDeptFoundByDeptId;
+import lombok.SneakyThrows;
 import org.apache.http.annotation.Contract;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -159,9 +162,14 @@ public class ContractTypeChoiceController {
      * @param typeDeciderRequestBody
      * @return
      */
+    @Transactional
+    @SneakyThrows
     @PostMapping
     public ResponseDto typeDecide(@RequestParam("accessToken")String accessToken, @RequestParam("userId")String userId, @RequestBody @Validated TypeDeciderRequestBody typeDeciderRequestBody){
 
+        if (Integer.parseInt(typeDeciderRequestBody.getUserDeptId())==1){
+            throw new BussException("不能传入根部门");
+        }
         DeptEntity deptEntity = new DeptEntity();
         List<Map<String,String>> deptList = new ArrayList<>();
 
