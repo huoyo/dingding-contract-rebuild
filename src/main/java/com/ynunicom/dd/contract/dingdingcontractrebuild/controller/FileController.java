@@ -19,8 +19,9 @@ public class FileController {
     FileService fileService;
 
     @PostMapping("/del")
-    public ResponseDto delFile(@RequestParam("accessToken")String accessToken, @RequestParam("fileName")String fileName, @RequestParam("userId")String userId,@RequestParam("contractId")String contractId){
-        fileService.del(accessToken,fileName,userId,contractId);
+    public ResponseDto delFile(@RequestParam("accessToken")String accessToken, @RequestParam("fileName")String fileName, @RequestParam("userId")String userId,@RequestParam("contractId")String contractId,
+                               @RequestParam("taskId")String taskId){
+        fileService.del(accessToken,fileName,userId,contractId,taskId);
         return  ResponseDto.success("删除附件成功");
     }
 

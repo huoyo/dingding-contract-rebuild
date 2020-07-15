@@ -171,28 +171,43 @@ public class ContractTypeChoiceController {
             throw new BussException("不能传入根部门");
         }
         DeptEntity deptEntity = new DeptEntity();
+        Integer type = 0;
         List<Map<String,String>> deptList = new ArrayList<>();
 
         //战略框架合作协议
         if (typeDeciderRequestBody.getType().equals(ContractTypes.STRATEGY_FRAMEWORK)){
             deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
+            type = 1;
         }
 
         //支出类框架协议
         else if (typeDeciderRequestBody.getType().equals(ContractTypes.EXPENDITURE_FRAMEWORK)){
             deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
+            type = 2;
         }
 
         //支出类固定金额合同
         else if (typeDeciderRequestBody.getType().equals(ContractTypes.EXPENDITURE_FIXED_AMOUNT)){
-            if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))>=0){
+            if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(0))==0){
                 deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
+                if (typeDeciderRequestBody.getIsSpe()==1){
+                    type = 3;
+                }
+                else {
+                    type = 2;
+                }
+            }
+            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))>=0){
+                deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
+                type = 3;
             }
             else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(300000))>=0&&typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))<0){
                 deptList = viceManagerJudge(deptList,accessToken,typeDeciderRequestBody);
+                type = 3;
             }
             else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(300000))<0){
                 deptList = deptManagerJudge(deptList,accessToken,typeDeciderRequestBody);
+                type = 3;
             }
         }
 
@@ -200,16 +215,20 @@ public class ContractTypeChoiceController {
         else if (typeDeciderRequestBody.getType().equals(ContractTypes.REVENUE)){
             if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(5000000))>=0){
                 deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
+                type = 4;
             }
             else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))>=0&&typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(5000000))<0){
                 deptList = viceManagerJudge(deptList,accessToken,typeDeciderRequestBody);
+                type = 4;
             }
             else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))<0){
                 deptList = deptManagerJudge(deptList,accessToken,typeDeciderRequestBody);
+                type = 4;
             }
         }
 
         deptEntity.setDeptIdList(deptList);
+        deptEntity.setProp(type);
         return ResponseDto.success(deptEntity);
     }
 }

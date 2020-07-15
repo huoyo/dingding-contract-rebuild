@@ -7,7 +7,6 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
-import com.mysql.cj.xdevapi.JsonArray;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
@@ -295,6 +294,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         ContractInfoEntity contractInfoEntity = (ContractInfoEntity) map.get("contract");
         String contractId = UUID.randomUUID().toString().replace("-","");
         contractInfoEntity.setId(contractId);
+        contractInfoEntity.setStatu(contractApplyRequestBody.getMethod()+"ing");
 
 
         //附件1保存并上传钉盘,存入流程变量
@@ -435,6 +435,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         }
         map.put("method",contractApplyRequestBody.getMethod());
         map.put("contract",contractInfoEntity);
+        map.put("moneyForConstract",contractApplyRequestBody.getMoneyForConstract());
+        map.put("isSpe",contractApplyRequestBody.getIsSpe());
+        map.put("userDeptId",contractApplyRequestBody.getUserDeptId());
         taskService.complete(task.getId(),map);
         return map;
     }

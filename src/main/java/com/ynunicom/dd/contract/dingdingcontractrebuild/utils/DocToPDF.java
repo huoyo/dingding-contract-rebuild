@@ -4,7 +4,6 @@ import com.aspose.words.Document;
 import com.aspose.words.License;
 import com.aspose.words.SaveFormat;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;

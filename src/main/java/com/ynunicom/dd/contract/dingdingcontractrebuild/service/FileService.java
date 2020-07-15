@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface FileService {
 
-    public boolean del(String accessToken, String fileName, String userId,String contractId);
+    public boolean del(String accessToken, String fileName, String userId,String contractId,String taskId);
 
     public HttpServletResponse getDoc(String accessToken, String fileName, HttpServletResponse httpServletResponse,String userId);
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
+import com.gitee.sunchenbin.mybatis.actable.constants.OracleTypeConstant;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -265,11 +266,11 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
     @TableField("prop")
     private Integer prop;
 
-    @Column(name = "createdtime", type = MySqlTypeConstant.DATETIME, isNull = false,comment = "创建时间")
+    @Column(name = "createdtime", type = MySqlTypeConstant.DATE, isNull = false,comment = "创建时间")
     @TableField(value = "createdtime",fill = FieldFill.INSERT)
     protected Date createdtime;
 
-    @Column(name = "updatetime", type = MySqlTypeConstant.DATETIME, isNull = false,comment = "更新时间")
+    @Column(name = "updatetime", type = MySqlTypeConstant.DATE, isNull = false,comment = "更新时间")
     @TableField(value = "updatetime",fill = FieldFill.INSERT_UPDATE)
     protected Date updatetime;
 

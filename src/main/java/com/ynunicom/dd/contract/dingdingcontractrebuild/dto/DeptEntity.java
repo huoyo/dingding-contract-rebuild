@@ -15,4 +15,6 @@ public class DeptEntity implements Serializable {
 
     private List<Map<String,String>> deptIdList;
 
+    private Integer prop;
+
 }

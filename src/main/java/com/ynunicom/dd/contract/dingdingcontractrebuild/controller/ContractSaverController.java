@@ -160,7 +160,7 @@ public class ContractSaverController {
                 contractInfoMapper.updateById(contractInfoEntity);
                 contractInfoMapper.updateById(preContractInfoEntiry);
                 taskService.complete(taskIdRequestBody.getTaskId(),map);
-                return ResponseDto.success("签章完成");
+                return ResponseDto.success("存档完成");
             }
             else if (ContractInfoStatus.CONTINUEING.equals(contractInfoEntity.getStatu())){
                 contractInfoEntity.setStatu(ContractInfoStatus.RUNNING);
@@ -171,7 +171,7 @@ public class ContractSaverController {
                 contractInfoMapper.updateById(contractInfoEntity);
                 contractInfoMapper.updateById(preContractInfoEntiry);
                 taskService.complete(taskIdRequestBody.getTaskId(),map);
-                return ResponseDto.success("签章完成");
+                return ResponseDto.success("存档完成");
             }
             else if (ContractInfoStatus.PRE_ENDING.equals(contractInfoEntity.getStatu())){
                 contractInfoEntity.setStatu(ContractInfoStatus.ENDED);

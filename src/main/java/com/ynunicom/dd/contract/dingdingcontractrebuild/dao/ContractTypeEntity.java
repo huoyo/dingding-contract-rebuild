@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlTypeConstant;
+import com.gitee.sunchenbin.mybatis.actable.constants.OracleTypeConstant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +27,7 @@ public class ContractTypeEntity implements Serializable {
     @TableId
     private String id;
 
-    @Column(name = "level1st", type = MySqlTypeConstant.VARCHAR, isNull = false,
+    @Column(name = "level1st", type =MySqlTypeConstant.VARCHAR, isNull = false,
             comment = "一级目录")
     @TableField("level1st")
     private String level1st;
@@ -45,4 +46,9 @@ public class ContractTypeEntity implements Serializable {
             comment = "四大类的哪一种,1代表战略框架合作，2支出类框架协议，3支出类固定金额合同，4收入类合同")
     @TableField("prop")
     private Integer prop;
+
+    @Column(name = "isSpe", type = MySqlTypeConstant.INT,
+            comment = "此项为1的类型，不受金额影响其prop")
+    @TableField("isSpe")
+    private Integer isSpe;
 }

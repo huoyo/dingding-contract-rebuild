@@ -21,6 +21,5 @@ public class JudgeRequestBody {
     @NotNull
     private Boolean isOk;
 
-    @NotBlank
     private String comment;
 }

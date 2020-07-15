@@ -6,7 +6,6 @@ import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Appinfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.ServiceInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;

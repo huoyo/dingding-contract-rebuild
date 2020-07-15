@@ -228,7 +228,8 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //对方资质文件保存并上传钉盘，存入流程变量
-        if (!contractRecorrectRequestBody.getTheirQuality().isEmpty()){
+        MultipartFile qualityFIle = contractRecorrectRequestBody.getTheirQuality();
+        if (qualityFIle!=null&&!qualityFIle.isEmpty()){
             MultipartFile qualityFile = contractRecorrectRequestBody.getTheirQuality();
             String qualityFileName = FileSaver.save(filePath,qualityFile);
             String qualityFileMediaId = uploadToDingPan.doUpload(qualityFileName,accessToken);
@@ -241,8 +242,8 @@ public class RecorrectServiceImpl implements RecorrectService {
 
 
         //合同正文保存并上传钉盘，存入流程变量
-        if (!contractRecorrectRequestBody.getContractText().isEmpty()){
-            MultipartFile contractText = contractRecorrectRequestBody.getContractText();
+        MultipartFile contractText = contractRecorrectRequestBody.getContractText();
+        if (contractText!=null&&!contractText.isEmpty()){
             String contractTextFileName = FileSaver.save(filePath,contractText);
             if (contractTextFileName!=null){
                 String contractTextMediaId = uploadToDingPan.doUpload(contractTextFileName,accessToken);

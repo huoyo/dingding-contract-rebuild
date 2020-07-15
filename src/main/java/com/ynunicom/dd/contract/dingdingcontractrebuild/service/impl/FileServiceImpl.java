@@ -11,6 +11,8 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.DocToPDF;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.PushFileTo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UserVerify;
 import lombok.SneakyThrows;
+import org.flowable.engine.TaskService;
+import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,9 @@ import java.util.Map;
  */
 @Service
 public class FileServiceImpl implements FileService {
+
+    @Autowired
+    TaskService taskService;
 
     @Resource
     String filePath;
@@ -77,31 +82,49 @@ public class FileServiceImpl implements FileService {
     @Transactional(rollbackFor = Exception.class)
     @SneakyThrows
     @Override
-    public boolean del(String accessToken, String fileName, String userId, String contractId) {
+    public boolean del(String accessToken, String fileName, String userId, String contractId,String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (task==null){
+            throw new BussException(taskId+"任务不存在");
+        }
+        Map<String,Object> map = taskService.getVariables(task.getId());
+        ContractInfoEntity contractInfoEntityForMap = (ContractInfoEntity) map.get("contract");
         ContractInfoEntity contractInfoEntity = contractInfoMapper.selectById(contractId);
         if (contractInfoEntity==null){
             throw new BussException(contractId+"此合同不存在");
         }
         if (contractInfoEntity.getAttachmentFilePath1().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath1("");
+            contractInfoEntityForMap.setAttachmentDingPanid1("");
             contractInfoEntity.setAttachmentFilePath1("");
             contractInfoEntity.setAttachmentDingPanid1("");
         }
         if (contractInfoEntity.getAttachmentFilePath2().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath2("");
+            contractInfoEntityForMap.setAttachmentDingPanid2("");
             contractInfoEntity.setAttachmentFilePath2("");
             contractInfoEntity.setAttachmentDingPanid2("");
         }
         if (contractInfoEntity.getAttachmentFilePath3().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath3("");
+            contractInfoEntityForMap.setAttachmentDingPanid3("");
             contractInfoEntity.setAttachmentFilePath3("");
             contractInfoEntity.setAttachmentDingPanid3("");
         }
         if (contractInfoEntity.getAttachmentFilePath4().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath4("");
+            contractInfoEntityForMap.setAttachmentDingPanid4("");
             contractInfoEntity.setAttachmentFilePath4("");
             contractInfoEntity.setAttachmentDingPanid4("");
         }
         if (contractInfoEntity.getAttachmentFilePath5().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath5("");
+            contractInfoEntityForMap.setAttachmentDingPanid5("");
             contractInfoEntity.setAttachmentFilePath5("");
             contractInfoEntity.setAttachmentDingPanid5("");
         }
+        map.put("contract",contractInfoEntityForMap);
+        taskService.setVariables(task.getId(),map);
         contractInfoMapper.updateById(contractInfoEntity);
         return true;
     }

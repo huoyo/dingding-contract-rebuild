@@ -13,6 +13,7 @@ import com.taobao.api.internal.util.WebUtils;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,6 +24,7 @@ import java.io.RandomAccessFile;
  * @author: jinye.Bai
  * @date: 2020/6/19 15:45
  */
+@Slf4j
 @Component
 public class UploadToDingPan {
 

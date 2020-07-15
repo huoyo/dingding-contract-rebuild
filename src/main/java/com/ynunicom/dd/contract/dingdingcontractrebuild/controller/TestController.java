@@ -2,17 +2,16 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiCspaceAddRequest;
 import com.dingtalk.api.request.OapiCspaceGetCustomSpaceRequest;
 import com.dingtalk.api.request.OapiCspaceGrantCustomSpaceRequest;
+import com.dingtalk.api.response.OapiCspaceAddResponse;
 import com.dingtalk.api.response.OapiCspaceGetCustomSpaceResponse;
 import com.dingtalk.api.response.OapiCspaceGrantCustomSpaceResponse;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.AddToSpaceId;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.DocToPDF;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.FileSaver;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UploadToDingPan;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.buf.Utf8Encoder;
@@ -63,18 +62,31 @@ public class TestController {
     }
 
     @SneakyThrows
+    @PostMapping("/sendFileToUserSpace")
+    public ResponseDto send(@RequestParam("accessToken")String accessToken,@RequestParam("userId")String userId,@RequestParam("code")String code,@RequestParam("mediaId")String mediaId,@RequestParam("fileName")String fileName){
+        String spaceId = GetSpaceId.getSpaceId(appInfo,accessToken);
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/cspace/add");
+        OapiCspaceAddRequest request = new OapiCspaceAddRequest();
+        request.setAgentId(appInfo.getAgentId());
+        request.setCode(code);
+        request.setMediaId(mediaId);
+        request.setSpaceId(spaceId);
+        request.setName(fileName);
+        request.setOverwrite(true);
+        request.setHttpMethod("GET");
+        OapiCspaceAddResponse response = client.execute(request,accessToken);
+        if (!response.isSuccess()){
+            throw new BussException("文件加入用户空间失败");
+        }
+        return ResponseDto.success(response.getErrmsg());
+    }
+
+
+    @SneakyThrows
     @GetMapping("/space")
     public ResponseDto space(@RequestParam("accessToken")String accessToken){
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/cspace/get_custom_space");
-        OapiCspaceGetCustomSpaceRequest request = new OapiCspaceGetCustomSpaceRequest();
-        request.setAgentId(appInfo.getAgentId());
-        request.setDomain(appInfo.getDomain());
-        request.setHttpMethod("GET");
-        OapiCspaceGetCustomSpaceResponse response = client.execute(request,accessToken);
-        if (!response.isSuccess()){
-            throw new BussException(response.getErrmsg());
-        }
-        return ResponseDto.success("spaceId",response.getSpaceid());
+        String spaceId = GetSpaceId.getSpaceId(appInfo,accessToken);
+        return ResponseDto.success("spaceId",spaceId);
     }
 
     @SneakyThrows

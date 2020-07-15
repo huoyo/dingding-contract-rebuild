@@ -25,5 +25,8 @@ public class TypeDeciderRequestBody implements Serializable {
     @NotBlank
     private String userDeptId;
 
+    @NotNull
+    private Integer isSpe;
+
 
 }
