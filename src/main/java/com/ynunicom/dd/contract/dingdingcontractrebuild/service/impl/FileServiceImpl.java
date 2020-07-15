@@ -79,7 +79,6 @@ public class FileServiceImpl implements FileService {
         return file.exists();
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @SneakyThrows
     @Override
     public boolean del(String accessToken, String fileName, String userId, String contractId,String taskId) {
@@ -93,39 +92,39 @@ public class FileServiceImpl implements FileService {
         if (contractInfoEntity==null){
             throw new BussException(contractId+"此合同不存在");
         }
-        if (contractInfoEntity.getAttachmentFilePath1().equals(fileName)){
-            contractInfoEntityForMap.setAttachmentFilePath1("");
-            contractInfoEntityForMap.setAttachmentDingPanid1("");
+        if (contractInfoEntity.getAttachmentFilePath1()!=null&&contractInfoEntity.getAttachmentFilePath1().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath1(null);
+            contractInfoEntityForMap.setAttachmentDingPanid1(null);
             contractInfoEntity.setAttachmentFilePath1("");
             contractInfoEntity.setAttachmentDingPanid1("");
         }
-        if (contractInfoEntity.getAttachmentFilePath2().equals(fileName)){
-            contractInfoEntityForMap.setAttachmentFilePath2("");
-            contractInfoEntityForMap.setAttachmentDingPanid2("");
+        if (contractInfoEntity.getAttachmentFilePath2()!=null&&contractInfoEntity.getAttachmentFilePath2().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath2(null);
+            contractInfoEntityForMap.setAttachmentDingPanid2(null);
             contractInfoEntity.setAttachmentFilePath2("");
             contractInfoEntity.setAttachmentDingPanid2("");
         }
-        if (contractInfoEntity.getAttachmentFilePath3().equals(fileName)){
-            contractInfoEntityForMap.setAttachmentFilePath3("");
-            contractInfoEntityForMap.setAttachmentDingPanid3("");
+        if (contractInfoEntity.getAttachmentFilePath3()!=null&&contractInfoEntity.getAttachmentFilePath3().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath3(null);
+            contractInfoEntityForMap.setAttachmentDingPanid3(null);
             contractInfoEntity.setAttachmentFilePath3("");
             contractInfoEntity.setAttachmentDingPanid3("");
         }
-        if (contractInfoEntity.getAttachmentFilePath4().equals(fileName)){
-            contractInfoEntityForMap.setAttachmentFilePath4("");
-            contractInfoEntityForMap.setAttachmentDingPanid4("");
+        if (contractInfoEntity.getAttachmentFilePath4()!=null&&contractInfoEntity.getAttachmentFilePath4().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath4(null);
+            contractInfoEntityForMap.setAttachmentDingPanid4(null);
             contractInfoEntity.setAttachmentFilePath4("");
             contractInfoEntity.setAttachmentDingPanid4("");
         }
-        if (contractInfoEntity.getAttachmentFilePath5().equals(fileName)){
-            contractInfoEntityForMap.setAttachmentFilePath5("");
-            contractInfoEntityForMap.setAttachmentDingPanid5("");
+        if (contractInfoEntity.getAttachmentFilePath5()!=null&&contractInfoEntity.getAttachmentFilePath5().equals(fileName)){
+            contractInfoEntityForMap.setAttachmentFilePath5(null);
+            contractInfoEntityForMap.setAttachmentDingPanid5(null);
             contractInfoEntity.setAttachmentFilePath5("");
             contractInfoEntity.setAttachmentDingPanid5("");
         }
         map.put("contract",contractInfoEntityForMap);
         taskService.setVariables(task.getId(),map);
-        contractInfoMapper.updateById(contractInfoEntity);
+        int result = contractInfoMapper.updateById(contractInfoEntity);
         return true;
     }
 

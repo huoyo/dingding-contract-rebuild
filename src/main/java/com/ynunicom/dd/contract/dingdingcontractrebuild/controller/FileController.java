@@ -18,7 +18,7 @@ public class FileController {
     @Resource
     FileService fileService;
 
-    @PostMapping("/del")
+    @GetMapping("/del")
     public ResponseDto delFile(@RequestParam("accessToken")String accessToken, @RequestParam("fileName")String fileName, @RequestParam("userId")String userId,@RequestParam("contractId")String contractId,
                                @RequestParam("taskId")String taskId){
         fileService.del(accessToken,fileName,userId,contractId,taskId);
