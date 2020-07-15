@@ -285,10 +285,10 @@ public class ContractInfoEntity extends BaseModel implements Serializable,Entity
         this.contractRunnerName = contractApplyRequestBody.getContractRunnerNamer();
         this.contractRunnerUserId = contractApplyRequestBody.getContractRunnerUserId();
         this.contractType = contractApplyRequestBody.getContractType();
-        this.moneyOfTax = String.valueOf(contractApplyRequestBody.getMoneyOfTax());
-        this.taxRate = String.valueOf(contractApplyRequestBody.getTaxRate());
-        this.moneyWithOutTax = String.valueOf(contractApplyRequestBody.getMoneyWithOutTax());
-        this.moneyWithTax = String.valueOf(contractApplyRequestBody.getMoneyWithTax());
+        this.moneyOfTax = contractApplyRequestBody.getMoneyOfTax();
+        this.taxRate =contractApplyRequestBody.getTaxRate();
+        this.moneyWithOutTax = contractApplyRequestBody.getMoneyWithOutTax();
+        this.moneyWithTax = contractApplyRequestBody.getMoneyWithTax();
         this.ourSideEntity = contractApplyRequestBody.getOurSideEntity();
         this.theirEntityName = contractApplyRequestBody.getTheirEntityName();
         this.organizerName = contractApplyRequestBody.getOrganizerName();

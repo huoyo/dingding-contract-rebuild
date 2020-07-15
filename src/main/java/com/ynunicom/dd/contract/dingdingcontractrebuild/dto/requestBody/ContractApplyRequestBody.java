@@ -52,13 +52,13 @@ public class ContractApplyRequestBody implements Serializable {
 
     private String theWayToPay;
 
-    private BigDecimal moneyWithOutTax;
+    private String moneyWithOutTax;
 
-    private BigDecimal taxRate;
+    private String taxRate;
 
-    private BigDecimal moneyOfTax;
+    private String moneyOfTax;
 
-    private BigDecimal moneyWithTax;
+    private String moneyWithTax;
 
     private String deadlineForPerformance;
 

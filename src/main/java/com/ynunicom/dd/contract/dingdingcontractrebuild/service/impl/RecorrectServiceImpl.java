@@ -261,6 +261,7 @@ public class RecorrectServiceImpl implements RecorrectService {
         //结束任务
         contractInfoEntity.setStatu(((String) map.get("method"))+"ing");
         map.put("contract",contractInfoEntity);
+        taskService.setVariables(task.getId(),map);
         taskService.complete(task.getId(),map);
         return map;
     }
