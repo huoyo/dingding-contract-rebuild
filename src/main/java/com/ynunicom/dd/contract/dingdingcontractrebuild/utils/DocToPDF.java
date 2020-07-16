@@ -40,7 +40,7 @@ public class DocToPDF {
         }
         pdfFileNameBuilder.append(".pdf");
         String pdfFileName = pdfFileNameBuilder.toString();
-        File path = new File("/pdf");
+        File path = new File("./pdf");
         if (!path.exists()){
             if (!path.mkdir()){
                 throw new BussException("pdf文件夹创建失败");
@@ -54,7 +54,7 @@ public class DocToPDF {
         }
         Long before = System.currentTimeMillis();
         Document document = new Document(filePath+"/"+docFileName);
-        File pdfFile = new File("/pdf/"+pdfFileName);
+        File pdfFile = new File("./pdf/"+pdfFileName);
         FileOutputStream fileOutputStream = new FileOutputStream(pdfFile);
         document.save(fileOutputStream, SaveFormat.PDF);
         fileOutputStream.close();

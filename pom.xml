@@ -19,7 +19,7 @@
     </properties>
 
     <repositories>
-    <repository>
+        <repository>
             <id>alimaven</id>
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
@@ -96,11 +96,12 @@
         </dependency>
 
         <!--mysql驱动依赖-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.15</version>
-        </dependency>
+         <dependency>
+             <groupId>mysql</groupId>
+             <artifactId>mysql-connector-java</artifactId>
+             <version>8.0.15</version>
+         </dependency>
+
 
 
         <dependency>
@@ -164,7 +165,15 @@
             <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1479188381469-20200520.jar</systemPath>
         </dependency>
 
-        <!--钉钉SDK-->
+        <!--oracle数据库-->
+         <dependency>
+            <groupId>com.oracle.jdbc</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.1.0.6.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ojdbc6-11.1.0.6.0.jar</systemPath>
+        </dependency>
+        <!--aspose-->
         <dependency>
             <groupId>aspose</groupId>
             <artifactId>words</artifactId>
@@ -195,7 +204,7 @@
         <resources>
             <resource>
                 <directory>${project.basedir}/lib</directory>
-                <targetPath>WEB-INF/lib/</targetPath>
+                <targetPath>BOOT-INF/lib/</targetPath>
                 <includes>
                     <include>**/*.jar</include>
                 </includes>
@@ -220,6 +229,13 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

@@ -3,7 +3,6 @@ package com.ynunicom.dd.contract.dingdingcontractrebuild.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTypeEntity;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.DeptRelation;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTypeMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.DeptRelationMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractTypes;
@@ -13,7 +12,6 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.TypeDeci
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UpperDeptFoundByDeptId;
 import lombok.SneakyThrows;
-import org.apache.http.annotation.Contract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -149,6 +147,7 @@ public class ContractTypeChoiceController {
     }
 
 
+    @SneakyThrows
     @GetMapping
     public ResponseDto typeChoice(@RequestParam("accessToken")String accessToken, @RequestParam("userId")String userId){
         List<ContractTypeEntity> contractTypeEntityList = contractTypeMapper.selectList(new LambdaQueryWrapper<ContractTypeEntity>());

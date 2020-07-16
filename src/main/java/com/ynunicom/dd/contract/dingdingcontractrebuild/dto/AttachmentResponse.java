@@ -11,5 +11,5 @@ import java.util.Map;
  */
 @Data
 public class AttachmentResponse implements Serializable {
-    private Map<String,String> map;
+    private Map<String,String> attachmentsMap;
 }

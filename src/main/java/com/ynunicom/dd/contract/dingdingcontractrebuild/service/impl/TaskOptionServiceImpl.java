@@ -127,7 +127,7 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         if(contractInfoEntity.getAttachmentFilePath5()!=null){
             attachmentMap.put(contractInfoEntity.getAttachmentFilePath5(),contractInfoEntity.getAttachmentDingPanid5());
         }
-        attachmentResponse.setMap(attachmentMap);
+        attachmentResponse.setAttachmentsMap(attachmentMap);
         map.put("attachments",attachmentResponse);
 
         JSONArray jsonArray = JSONArray.parseArray(JSON.toJSONString(map.get("stages")));

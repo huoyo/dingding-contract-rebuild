@@ -8,15 +8,10 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/DD?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-          username: root
-          password: bjy653300
-          driver-class-name: com.mysql.cj.jdbc.Driver
-        slave:
-          url: jdbc:mysql://127.0.0.1:3306/contract?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-          username: root
-          password: bjy653300
-          driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://127.0.0.1:3306/DD?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+            username: root
+            password: bjy653300
+            driver-class-name: com.mysql.cj.jdbc.Driver
       druid:
         keep-alive: true
 
@@ -28,18 +23,22 @@ spring:
       max-request-size: 50MB
 
 
+
 mybatis:
   table:
     auto: update
   model:
     pack: com.ynunicom.dd.contract.dingdingcontractrebuild.dao
   database:
-    type: mysql
+    type: oracle
 mybatis-plus:
   mapper-locations: classpath*:/dao/mapper/*/*.xml,classpath*:com/gitee/sunchenbin/mybatis/actable/mapping/*/*.xml
 
 server:
   port: 6051
+  servlet:
+    context-path: /dingdingContractApi
+
 
 dingding:
   manager-Id: "135659635720289701"
@@ -60,3 +59,6 @@ dingding:
   contract-saver-role: "contractSaverRole"
   contract-saver-role-id: "1501216246"
   super-user-role: "superUser"
+
+flowable:
+  database-schema-update: true
