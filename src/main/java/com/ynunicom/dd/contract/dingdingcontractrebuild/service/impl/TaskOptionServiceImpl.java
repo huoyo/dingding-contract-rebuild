@@ -212,7 +212,10 @@ public class TaskOptionServiceImpl implements TaskOptionService {
         }
         AttachmentResponse attachmentResponse = new AttachmentResponse();
         jsonArray.addAll(mapList);
-        jsonArray.add(getByRole(accessToken,userId));
+        JSONArray roleTasks = getByRole(accessToken,userId);
+        if(roleTasks!=null&&!roleTasks.isEmpty()){
+            jsonArray.add(roleTasks);
+        }
         return jsonArray;
     }
 

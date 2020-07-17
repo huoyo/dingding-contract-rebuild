@@ -100,7 +100,7 @@ public class ContractTypeChoiceController {
 
         //塞入公司分管副总
         Map<String,String> viceManager = new HashMap<>(2);
-        viceManager.put("name","分管副总用户id");
+        viceManager.put("name","分管副总");
         viceManager.put("id",appInfo.getViceManagerId());
         deptList.add(viceManager);
 
@@ -135,13 +135,13 @@ public class ContractTypeChoiceController {
 
         //塞入公司分管副总
         Map<String,String> viceManager = new HashMap<>(2);
-        viceManager.put("name","分管副总用户id");
+        viceManager.put("name","分管副总");
         viceManager.put("id",appInfo.getViceManagerId());
         deptList.add(viceManager);
 
         //塞入公司总经理
         Map<String,String> manager = new HashMap<>(2);
-        manager.put("name","总经理用户id");
+        manager.put("name","总经理");
         manager.put("id",appInfo.getManagerId());
         deptList.add(manager);
 
