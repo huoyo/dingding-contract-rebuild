@@ -260,15 +260,15 @@ public class ContractTypeChoiceController {
                     type = 2;
                 }
             }
-            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))>=0){
+            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(100))>=0){
                 deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
                 type = 3;
             }
-            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(300000))>=0&&typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))<0){
+            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(30))>=0&&typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(100))<0){
                 deptList = viceManagerJudge(deptList,accessToken,typeDeciderRequestBody);
                 type = 3;
             }
-            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(300000))<0){
+            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(30))<0){
                 deptList = deptManagerJudge(deptList,accessToken,typeDeciderRequestBody);
                 type = 3;
             }
@@ -276,15 +276,15 @@ public class ContractTypeChoiceController {
 
         //收入类合同
         else if (typeDeciderRequestBody.getType().equals(ContractTypes.REVENUE)){
-            if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(5000000))>=0){
+            if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(500))>=0){
                 deptList = managerJudge(deptList,accessToken,typeDeciderRequestBody);
                 type = 4;
             }
-            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))>=0&&typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(5000000))<0){
+            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(100))>=0&&typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(500))<0){
                 deptList = viceManagerJudge(deptList,accessToken,typeDeciderRequestBody);
                 type = 4;
             }
-            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(1000000))<0){
+            else if (typeDeciderRequestBody.getMoney().compareTo(new BigDecimal(100))<0){
                 deptList = deptManagerJudge(deptList,accessToken,typeDeciderRequestBody);
                 type = 4;
             }
