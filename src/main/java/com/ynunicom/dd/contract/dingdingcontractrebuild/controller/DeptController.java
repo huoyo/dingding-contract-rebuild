@@ -31,8 +31,6 @@ public class DeptController {
     @Resource
     UserInfoService userInfoService;
 
-    @Resource
-    RestTemplate restTemplate;
 
     /**
      * 部门列表查询

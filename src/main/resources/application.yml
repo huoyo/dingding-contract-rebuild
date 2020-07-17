@@ -8,10 +8,10 @@ spring:
       primary: master
       datasource:
         master:
-            url: jdbc:mysql://127.0.0.1:3306/DD?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-            username: root
-            password: bjy653300
-            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:oracle:thin:@ localhost:1521:ora12
+            username: dingding
+            password: Sun!837278
+            driver-class-name: oracle.jdbc.OracleDriver
       druid:
         keep-alive: true
 

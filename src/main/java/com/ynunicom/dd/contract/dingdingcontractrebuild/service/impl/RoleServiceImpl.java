@@ -35,6 +35,9 @@ public class RoleServiceImpl implements RoleService {
             throw new BussException("查询用户信息失败");
         }
         JSONArray jsonArray = jsonObject.getJSONArray("roles");
+        if (jsonArray==null||jsonArray.isEmpty()){
+            return null;
+        }
         Iterator iterator = jsonArray.iterator();
         List<String> returner = new ArrayList<>();
         while (iterator.hasNext()){

@@ -4,11 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.AttachmentEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntityForSelect;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractTemplateEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.AttachmentMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoSelectMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractTemplateMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractInfoStatus;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.MethodStatus;
@@ -16,7 +13,6 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.JudgePersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.PersonEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ProcessInstanceDefKey;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractAlterRequestBody;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.ContractApplyRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.AlterService;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.service.DeptService;
@@ -75,8 +71,6 @@ public class AlterServiceImpl implements AlterService {
     @Autowired
     ContractInfoMapper contractInfoMapper;
 
-    @Autowired
-    ContractInfoSelectMapper contractInfoSelectMapper;
 
     @Resource
     DeptService deptService;

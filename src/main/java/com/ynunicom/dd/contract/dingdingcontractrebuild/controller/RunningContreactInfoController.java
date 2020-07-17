@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.config.info.AppInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntity;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.ContractInfoEntityForSelect;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoMapper;
-import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.ContractInfoSelectMapper;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.RunningContractCommentRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
@@ -30,9 +28,6 @@ public class RunningContreactInfoController {
 
     @Autowired
     ContractInfoMapper contractInfoMapper;
-
-    @Autowired
-    ContractInfoSelectMapper contractInfoSelectMapper;
 
     @Resource
     RoleService roleService;
@@ -78,7 +73,7 @@ public class RunningContreactInfoController {
         if (!flag){
             throw new BussException(userId+"用户不具有超级权限");
         }
-        Page contractInfoEntityList = contractInfoSelectMapper.selectPage(page,new LambdaQueryWrapper<ContractInfoEntityForSelect>().eq(ContractInfoEntityForSelect::getStatu,"running"));
+        Page contractInfoEntityList = contractInfoMapper.selectPage(page,new LambdaQueryWrapper<ContractInfoEntity>().eq(ContractInfoEntity::getStatu,"running"));
         return ResponseDto.success(contractInfoEntityList);
     }
 

@@ -8,6 +8,8 @@ import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.mapper.DeptRelationM
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dao.status.ContractTypes;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.DeptEntity;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.ResponseDto;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.TypeContainer;
+import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.TypeInfo;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.dto.requestBody.TypeDeciderRequestBody;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.exception.BussException;
 import com.ynunicom.dd.contract.dingdingcontractrebuild.utils.UpperDeptFoundByDeptId;
@@ -151,7 +153,69 @@ public class ContractTypeChoiceController {
     @GetMapping
     public ResponseDto typeChoice(@RequestParam("accessToken")String accessToken, @RequestParam("userId")String userId){
         List<ContractTypeEntity> contractTypeEntityList = contractTypeMapper.selectList(new LambdaQueryWrapper<ContractTypeEntity>());
-        return ResponseDto.success(contractTypeEntityList);
+        List<TypeContainer> rootList = new ArrayList<>();
+        for (ContractTypeEntity contractTypeEntity :
+                contractTypeEntityList
+        ) {
+            if (contractTypeEntity.getParentId()==null){
+                TypeContainer inerMap = new TypeContainer();
+                inerMap.setId(contractTypeEntity.getId());
+                inerMap.setName(contractTypeEntity.getName());
+                inerMap.setIsSpe(contractTypeEntity.getIsSpe());
+                inerMap.setProp(contractTypeEntity.getProp());
+                rootList.add(inerMap);
+            }
+        }
+        for (TypeContainer inerMap:
+                rootList
+             ){
+            List<TypeContainer> inerTypeContainerList = new ArrayList<>();
+            for (ContractTypeEntity contractTypeEntity:
+                    contractTypeEntityList
+                 ){
+                if (contractTypeEntity.getParentId()==null){
+                    continue;
+                }
+                if (contractTypeEntity.getParentId().equals(inerMap.getId())){
+                    TypeContainer ininerMap = new TypeContainer();
+                    ininerMap.setName(contractTypeEntity.getName());
+                    ininerMap.setId(contractTypeEntity.getId());
+                    ininerMap.setIsSpe(contractTypeEntity.getIsSpe());
+                    ininerMap.setProp(contractTypeEntity.getProp());
+                    inerTypeContainerList.add(ininerMap);
+                }
+            }
+            inerMap.setTypeContainer(inerTypeContainerList);
+        }
+        for (TypeContainer typeContainer:
+                rootList
+        ) {
+            for (TypeContainer inerTypeContainer:
+                    typeContainer.getTypeContainer()
+                 ){
+                List<TypeContainer> inerTyperContainerList = new ArrayList<>();
+                for (ContractTypeEntity contractTypeEntity:
+                        contractTypeEntityList
+                     ){
+                    if (contractTypeEntity.getParentId()==null){
+                        continue;
+                    }
+                    if (contractTypeEntity.getParentId().equals(inerTypeContainer.getId())){
+                        TypeContainer typeContainerX = new TypeContainer();
+                        typeContainerX.setId(contractTypeEntity.getId());
+                        typeContainerX.setName(contractTypeEntity.getName());
+                        typeContainerX.setIsSpe(contractTypeEntity.getIsSpe());
+                        typeContainerX.setProp(contractTypeEntity.getProp());
+                        inerTyperContainerList.add(typeContainerX);
+                    }
+
+                }
+                inerTypeContainer.setTypeContainer(inerTyperContainerList);
+            }
+
+        }
+
+        return ResponseDto.success(rootList);
     }
 
     /**

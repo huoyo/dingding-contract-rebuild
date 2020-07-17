@@ -31,7 +31,7 @@ public class MsgPushForContractSaverListener implements TaskListener {
         RestTemplate restTemplate = SpringHelper.getBean("restTemplate");
         ServiceInfo serviceInfo = SpringHelper.getBean("serviceInfo");
         AppInfo appInfo = SpringHelper.getAppInfo();
-        JSONObject jsonObject = restTemplate.getForObject("http://localhost:"+serviceInfo.getPort()+"/auth/getToken", JSONObject.class,new HashMap<>(1));
+        JSONObject jsonObject = restTemplate.getForObject("http://localhost:"+serviceInfo.getPort()+"/dingdingContractApi/auth/getToken", JSONObject.class,new HashMap<>(1));
         if (jsonObject==null){
             throw new BussException("发送消息失败");
         }

@@ -244,6 +244,9 @@ public class TaskOptionServiceImpl implements TaskOptionService {
     @Override
     public JSONArray getByRole(String accessToken, String userId) {
         List<String> roleList =  roleService.getRoleByUserId(userId,accessToken);
+        if(roleList==null||roleList.isEmpty()){
+            return null;
+        }
         JSONArray jsonArray = new JSONArray();
         Set<Task> taskSet = new HashSet<>();
         for (String role:
