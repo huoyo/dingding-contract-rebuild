@@ -16,6 +16,7 @@ import java.util.Date;
  * @author: jinye.Bai
  * @date: 2020/6/19 10:21
  */
+@Deprecated
 @Data
 @Table(name = "Contract_Template")
 @TableName("Contract_Template")

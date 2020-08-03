@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
  * @author: jinye.Bai
  * @date: 2020/7/8 14:02
  */
+@Deprecated
 @NoArgsConstructor
 @Data
 @TableName(value = "DEPT_RELATION")
